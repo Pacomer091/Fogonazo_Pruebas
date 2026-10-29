@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carta Digital & Pedidos | Gourmet Restobar</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/customer.css">
+  <link rel="stylesheet" href="css/restaurant.css">
+  <style>
+    .svg-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+    .svg-icon svg {
+      width: 1em;
+      height: 1em;
+      stroke: currentColor;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Global Nav (Customer Facing Only) -->
+  <header class="global-nav">
+    <a href="index.html" class="brand-badge">
+      <div class="logo-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+          <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+          <line x1="6" y1="1" x2="6" y2="4"></line>
+          <line x1="10" y1="1" x2="10" y2="4"></line>
+          <line x1="14" y1="1" x2="14" y2="4"></line>
+        </svg>
+      </div>
+      <span>Gourmet<span class="accent">Flow</span></span>
+    </a>
+
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <!-- Call Waiter / Chat Button -->
+      <button id="btn-customer-chat" class="btn btn-secondary btn-sm" onclick="openCustomerChat()" style="display: none;">
+        <span class="svg-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </span>
+        <span>Contactar Restaurante</span>
+      </button>
+
+      <!-- Cart shortcut in top bar if items exist -->
+      <button onclick="openCartModal()" class="btn btn-primary btn-sm" id="top-cart-btn" style="display: none;">
+        <span class="svg-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+        </span>
+        <span>Carrito</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Customer Experience -->
+  <main class="customer-wrapper">
+    
+    <!-- Restaurant Banner -->
+    <section class="restaurant-banner">
+      <div class="banner-info">
+        <h1 id="banner-rest-name">Gourmet Restobar</h1>
+        <p>Cocina mediterránea de autor • Productos frescos de proximidad y horno de leña</p>
+      </div>
+
+      <div class="table-picker-box">
+        <span class="svg-icon" style="color: var(--brand-orange-light);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+        </span>
+        <div>
+          <label style="font-size: 0.72rem; color: var(--text-muted); display: block; text-transform: uppercase;">Ubicación del pedido</label>
+          <select id="select-order-type" onchange="handleOrderTypeChange()">
+            <option value="mesa_1">Mesa 1 (Salón Principal)</option>
+            <option value="mesa_4" selected>Mesa 4 (Terraza)</option>
+            <option value="mesa_8">Mesa 8 (Ventanal)</option>
+            <option value="barra">Servicio en Barra</option>
+            <option value="delivery">Reparto a Domicilio</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Active Order Live Tracker Banner -->
+    <div id="live-order-tracker" class="tracking-banner" style="display: none;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="live-indicator"><span class="pulse-dot"></span> ESTADO DEL PEDIDO</span>
+          <strong id="tracker-order-id" style="font-size: 1.1rem; color: var(--brand-orange-light);">#ORD-000</strong>
+        </div>
+        <p id="tracker-status-desc" style="font-size: 0.88rem; color: var(--text-muted); margin-top: 4px;">
+          Tu comanda ha entrado en cocina.
+        </p>
+        
+        <div class="status-timeline">
+          <div class="timeline-step" id="step-pending">
+            <span class="svg-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </span>
+            Recibido
+          </div>
+          <span class="svg-icon" style="opacity: 0.4;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+          <div class="timeline-step" id="step-cooking">
+            <span class="svg-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3.5z"></path></svg>
+            </span>
+            En Cocina
+          </div>
+          <span class="svg-icon" style="opacity: 0.4;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+          <div class="timeline-step" id="step-ready">
+            <span class="svg-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </span>
+            Listo / Servido
+          </div>
+        </div>
+      </div>
+
+      <button onclick="openCustomerChat()" class="btn btn-secondary btn-sm" style="border-color: var(--brand-orange);">
+        <span class="svg-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </span>
+        <span>Hablar con el Personal</span>
+      </button>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="category-scroller" id="category-scroller">
+      <button class="category-pill active" onclick="filterCategory('all')">Toda la Carta</button>
+      <button class="category-pill" onclick="filterCategory('Pizzas Artesanas')">Pizzas Artesanas</button>
+      <button class="category-pill" onclick="filterCategory('Pastas Frescas')">Pastas Frescas</button>
+      <button class="category-pill" onclick="filterCategory('Entrantes')">Entrantes</button>
+      <button class="category-pill" onclick="filterCategory('Postres')">Postres</button>
+      <button class="category-pill" onclick="filterCategory('Bebidas & Vinos')">Bebidas y Vinos</button>
+    </div>
+
+    <!-- Dishes Grid -->
+    <div class="dishes-grid" id="dishes-container"></div>
+
+  </main>
+
+  <!-- Sticky Bottom Cart Bar -->
+  <div class="cart-floating-bar" id="floating-cart" onclick="openCartModal()" style="display: none;">
+    <div class="cart-summary-text">
+      <div class="cart-badge-count" id="cart-total-qty">0</div>
+      <div>
+        <span style="font-size: 0.85rem; color: var(--text-muted); display: block;">Mi Comanda</span>
+        <strong id="cart-total-price" style="font-size: 1.05rem;">0.00 €</strong>
+      </div>
+    </div>
+    <div class="btn btn-primary btn-sm">
+      <span>Revisar y Pagar</span>
+      <span class="svg-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </span>
+    </div>
+  </div>
+
+  <!-- Cart & Checkout Modal -->
+  <div class="modal-overlay" id="cart-modal">
+    <div class="cart-modal-content">
+      <div class="modal-header">
+        <h3 style="font-size: 1.2rem; font-weight: 800;">Tu Pedido</h3>
+        <button onclick="closeCartModal()" style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- List of items -->
+        <div id="cart-items-container"></div>
+
+        <!-- Customer & Delivery Form -->
+        <div style="margin-top: 1.5rem;">
+          <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Tu Nombre / Alias</label>
+          <input type="text" id="checkout-customer-name" class="form-input" placeholder="Ej. Carlos Mendoza" value="Carlos Mendoza">
+
+          <div id="delivery-address-group" style="display: none; margin-top: 12px;">
+            <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Dirección de Entrega</label>
+            <input type="text" id="checkout-address" class="form-input" placeholder="Calle, número, piso y puerta">
+          </div>
+
+          <div style="margin-top: 12px;">
+            <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Notas de cocina (opcional)</label>
+            <input type="text" id="checkout-note" class="form-input" placeholder="Sin cebolla, bien tostado, alérgenos...">
+          </div>
+        </div>
+
+        <!-- Payment Method Tabs with Official Logos -->
+        <div style="margin-top: 1.5rem;">
+          <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Selecciona Método de Pago</label>
+          
+          <div class="payment-tabs">
+            <button class="payment-tab-btn active" id="tab-btn-card" onclick="selectPaymentMethod('card')">
+              <span class="svg-icon" style="font-size: 1.3rem;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="5" width="20" height="14" rx="3"></rect>
+                  <line x1="2" y1="10" x2="22" y2="10"></line>
+                </svg>
+              </span>
+              <span>Tarjeta</span>
+            </button>
+
+            <button class="payment-tab-btn" id="tab-btn-bizum" onclick="selectPaymentMethod('bizum')">
+              <!-- Official Bizum Vector Logo -->
+              <svg width="58" height="20" viewBox="0 0 110 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="110" height="32" rx="6" fill="#00AA9E" fill-opacity="0.15"/>
+                <path d="M16 11C16 9.34315 17.3431 8 19 8H23C25.2091 8 27 9.79086 27 12C27 13.386 26.2978 14.6074 25.2285 15.318C26.6853 16.0371 27.6875 17.5491 27.6875 19.2969C27.6875 21.8943 25.5818 24 22.9844 24H19C17.3431 24 16 22.6569 16 21V11Z" fill="#00C4B4"/>
+                <text x="36" y="21" font-family="'DM Sans', sans-serif" font-size="16" font-weight="800" fill="#00D2C2" letter-spacing="-0.5">bizum</text>
+              </svg>
+              <span>Bizum</span>
+            </button>
+
+            <button class="payment-tab-btn" id="tab-btn-paypal" onclick="selectPaymentMethod('paypal')">
+              <!-- Official PayPal Vector Logo -->
+              <svg width="58" height="20" viewBox="0 0 100 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="28" rx="6" fill="#0079C1" fill-opacity="0.15"/>
+                <path d="M18.5 7H14.2C13.8 7 13.5 7.3 13.4 7.7L11.2 21.2C11.1 21.5 11.4 21.8 11.7 21.8H14.1C14.5 21.8 14.8 21.5 14.9 21.1L15.5 17.5C15.6 17.1 15.9 16.8 16.3 16.8H17.8C20.6 16.8 22.4 15.4 22.8 12.6C23 11.4 22.7 10.3 22 9.5C21.2 8.7 19.9 8.2 18.5 7Z" fill="#00457C"/>
+                <path d="M21.5 10H17.2C16.8 10 16.5 10.3 16.4 10.7L14.2 24.2C14.1 24.5 14.4 24.8 14.7 24.8H17.1C17.5 24.8 17.8 24.5 17.9 24.1L18.5 20.5C18.6 20.1 18.9 19.8 19.3 19.8H20.8C23.6 19.8 25.4 18.4 25.8 15.6C26.3 12.7 24.5 10 21.5 10Z" fill="#0079C1"/>
+                <text x="32" y="19" font-family="'DM Sans', sans-serif" font-size="14" font-weight="800" fill="#38BDF8">PayPal</text>
+              </svg>
+              <span>PayPal</span>
+            </button>
+          </div>
+
+          <!-- Payment Form Views -->
+          <div class="payment-details-box" id="pay-box-card">
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px;">Pago protegido con encriptación SSL</p>
+            <input type="text" class="form-input" placeholder="Número de Tarjeta (4545 •••• •••• 1234)" value="4545 0000 0000 1234" maxlength="19">
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+              <input type="text" class="form-input" placeholder="MM/AA" value="08/28" style="flex: 1;">
+              <input type="text" class="form-input" placeholder="CVV" value="789" style="flex: 1;">
+            </div>
+          </div>
+
+          <div class="payment-details-box" id="pay-box-bizum" style="display: none;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00C4B4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+              </svg>
+              <strong style="font-size: 0.85rem; color: #00D2C2;">Pasarela Oficial Bizum</strong>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px;">
+              Introduce tu teléfono móvil para autorizar el cargo directo en tu app bancaria:
+            </p>
+            <input type="tel" id="bizum-phone" class="form-input" placeholder="Número de móvil Bizum" value="654 987 321">
+          </div>
+
+          <div class="payment-details-box" id="pay-box-paypal" style="display: none; text-align: center;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 6px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 6v6l4 2"></path>
+              </svg>
+              <strong style="font-size: 0.85rem; color: #38BDF8;">PayPal Express Checkout</strong>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-muted);">
+              Confirmación de pago instantánea con tu saldo o cuenta vinculada de PayPal.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--border-color); background: rgba(0,0,0,0.2);">
+        <button id="btn-confirm-checkout" onclick="executeCheckout()" class="btn btn-primary" style="width: 100%; font-size: 1.05rem;">
+          Pagar y Enviar Pedido (0.00 €)
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Customer Chat Drawer (Floating) -->
+  <div class="chat-drawer" id="customer-chat-drawer">
+    <div class="chat-header">
+      <div>
+        <h4 style="font-size: 0.95rem; font-weight: 700;">Atención del Restaurante</h4>
+        <span id="cust-chat-sub" style="font-size: 0.75rem; color: var(--text-muted);">Estamos a tu disposición</span>
+      </div>
+      <button onclick="closeCustomerChat()" style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;">&times;</button>
+    </div>
+    <div class="chat-body" id="customer-chat-messages"></div>
+    <form class="chat-input-area" id="customer-chat-form">
+      <input type="text" id="customer-chat-input" class="chat-input" placeholder="Escribe aquí tu petición o duda..." autocomplete="off">
+      <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
+    </form>
+  </div>
+
+  <!-- Discreet Staff & Management Footer -->
+  <footer class="customer-footer">
+    <p>© 2026 GourmetFlow • Sistema Digital para Restaurantes</p>
+    <button onclick="openStaffModal()" class="discreet-link" title="Acceso reservado a personal y gerencia">
+      <span class="svg-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </span>
+      <span>Acceso Personal / Gestión</span>
+    </button>
+  </footer>
+
+  <!-- Discreet Staff Modal -->
+  <div class="modal-overlay" id="staff-modal">
+    <div class="staff-modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+        <h3 style="font-size: 1.2rem; font-weight: 800; display:flex; align-items:center; gap:8px;">
+          <span class="svg-icon" style="color: var(--brand-orange-light);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </span>
+          <span>Panel Privado</span>
+        </h3>
+        <button onclick="closeStaffModal()" style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <p style="font-size: 0.88rem; color: var(--text-muted); text-align: left;">
+        Área restringida para empleados del restaurante y administración de la plataforma:
+      </p>
+
+      <div class="staff-options">
+        <a href="restaurante.html" class="staff-btn">
+          <div style="text-align: left; display: flex; align-items: center; gap: 12px;">
+            <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(255, 94, 54, 0.15); display: flex; align-items: center; justify-content: center; color: var(--brand-orange-light);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 18h12v3a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-3z"></path>
+                <path d="M6 14v4h12v-4"></path>
+                <path d="M5 14a4 4 0 0 1 2.5-7.5 4.5 4.5 0 0 1 9 0A4 4 0 0 1 19 14z"></path>
+              </svg>
+            </div>
+            <div>
+              <div style="font-size: 1rem; color: var(--brand-orange-light);">Panel del Restaurante</div>
+              <span style="font-size: 0.78rem; color: var(--text-dim); font-weight: normal;">Comandas en vivo, cocina, sala y métricas</span>
+            </div>
+          </div>
+          <span class="svg-icon" style="color: var(--brand-orange);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+        </a>
+
+        <a href="admin.html" class="staff-btn">
+          <div style="text-align: left; display: flex; align-items: center; gap: 12px;">
+            <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(139, 92, 246, 0.15); display: flex; align-items: center; justify-content: center; color: #a78bfa;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <circle cx="12" cy="11" r="3"></circle>
+              </svg>
+            </div>
+            <div>
+              <div style="font-size: 1rem; color: #a78bfa;">Super Admin (Tu Panel)</div>
+              <span style="font-size: 0.78rem; color: var(--text-dim); font-weight: normal;">Control de restaurantes suscritos y facturación</span>
+            </div>
+          </div>
+          <span class="svg-icon" style="color: #a78bfa;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script src="js/icons.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/customer.js"></script>
+  <script>
+    function openStaffModal() {
+      document.getElementById('staff-modal').classList.add('open');
+    }
+    function closeStaffModal() {
+      document.getElementById('staff-modal').classList.remove('open');
+    }
+  </script>
+</body>
+</html>

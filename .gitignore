@@ -1,0 +1,9 @@
+node_modules/
+.env
+fogon.db
+fogon.db-wal
+fogon.db-shm
+.DS_Store
+Thumbs.db
+scratch/
+

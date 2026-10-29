@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Admin HQ - Control del SaaS | GourmetFlow</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/restaurant.css">
+  <style>
+    .saas-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .saas-table th {
+      text-align: left;
+      padding: 12px 16px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .saas-table td {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .saas-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .plan-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .plan-pro {
+      background: rgba(139, 92, 246, 0.15);
+      color: #a78bfa;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .plan-enterprise {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="global-nav">
+    <a href="index.html" class="brand-badge">
+      <div class="logo-icon" style="background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          <circle cx="12" cy="11" r="3"></circle>
+        </svg>
+      </div>
+      <span>Gourmet<span class="accent" style="background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">SaaS HQ</span></span>
+    </a>
+
+    <div class="role-switcher">
+      <a href="restaurante.html" class="role-tab">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 18h12v3a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-3z"></path>
+          <path d="M6 14v4h12v-4"></path>
+          <path d="M5 14a4 4 0 0 1 2.5-7.5 4.5 4.5 0 0 1 9 0A4 4 0 0 1 19 14z"></path>
+        </svg>
+        <span>Panel Restaurante</span>
+      </a>
+      <a href="index.html" class="role-tab" target="_blank" title="Abrir carta de clientes">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+        <span>Ver Carta Cliente</span>
+      </a>
+      <a href="admin.html" class="role-tab active">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          <circle cx="12" cy="11" r="3"></circle>
+        </svg>
+        <span>Super Admin</span>
+      </a>
+    </div>
+
+    <button onclick="openNewClientModal()" class="btn btn-primary btn-sm" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+      + Nuevo Restaurante
+    </button>
+  </header>
+
+  <main class="dashboard-container">
+    
+    <div class="rest-header">
+      <div class="rest-title-area">
+        <h2>Panel de Control Maestro (Para Ti)</h2>
+        <p>Gestión de clientes, suscripciones recurrentes y métricas globales de tu software de restauración.</p>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <span class="live-indicator" style="background: rgba(139, 92, 246, 0.15); color: #a78bfa;">
+          ● SaaS Activo
+        </span>
+      </div>
+    </div>
+
+    <!-- SaaS Business KPIs -->
+    <div class="kpi-grid">
+      <div class="glass-panel kpi-card">
+        <div class="kpi-info">
+          <span class="label">Ingresos Recurrentes (MRR)</span>
+          <h3 id="saas-mrr">1.240 €/mes</h3>
+        </div>
+        <div class="kpi-icon" style="color: #10b981; background: rgba(16, 185, 129, 0.1);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <div class="glass-panel kpi-card">
+        <div class="kpi-info">
+          <span class="label">Restaurantes Clientes</span>
+          <h3 id="saas-clients-count">4 Locales</h3>
+        </div>
+        <div class="kpi-icon" style="color: #3b82f6; background: rgba(59, 130, 246, 0.1);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+            <line x1="9" y1="22" x2="9" y2="16"></line>
+            <line x1="15" y1="22" x2="15" y2="16"></line>
+            <line x1="9" y1="6" x2="9" y2="6.01"></line>
+            <line x1="15" y1="6" x2="15" y2="6.01"></line>
+            <line x1="9" y1="10" x2="9" y2="10.01"></line>
+            <line x1="15" y1="10" x2="15" y2="10.01"></line>
+          </svg>
+        </div>
+      </div>
+
+      <div class="glass-panel kpi-card">
+        <div class="kpi-info">
+          <span class="label">Comisiones Generadas (5%)</span>
+          <h3 id="saas-commissions">0.00 €</h3>
+        </div>
+        <div class="kpi-icon" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+        </div>
+      </div>
+
+      <div class="glass-panel kpi-card">
+        <div class="kpi-info">
+          <span class="label">Volumen Total Pedidos</span>
+          <h3 id="saas-total-volume">0.00 €</h3>
+        </div>
+        <div class="kpi-icon" style="color: #a855f7; background: rgba(168, 85, 247, 0.1);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clients List Section -->
+    <div class="glass-panel" style="padding: 1.5rem; margin-top: 1rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <div>
+          <h3 style="font-size: 1.2rem; font-weight: 700;">Restaurantes Suscritos a tu Software</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Hosteleros que te pagan la mensualidad por usar GourmetFlow.</p>
+        </div>
+        <input type="text" id="search-clients" placeholder="Buscar restaurante..." class="form-input" style="max-width: 260px; margin: 0;">
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table class="saas-table">
+          <thead>
+            <tr>
+              <th>Restaurante</th>
+              <th>Contacto</th>
+              <th>Plan SaaS</th>
+              <th>Cuota Mensual</th>
+              <th>Estado Cobro</th>
+              <th>Comandas</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="clients-table-body">
+            <!-- Renderizado dinámicamente -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modal New Restaurant Client -->
+  <div class="modal-overlay" id="new-client-modal">
+    <div class="cart-modal-content">
+      <div class="modal-header">
+        <h3 style="font-size: 1.2rem; font-weight: 800;">Dar de Alta Nuevo Restaurante</h3>
+        <button onclick="closeNewClientModal()" style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="new-client-form" onsubmit="handleCreateClient(event)">
+          <div style="margin-bottom: 1rem;">
+            <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Nombre del Negocio</label>
+            <input type="text" id="client-name" class="form-input" required placeholder="Ej. Taberna El Capricho">
+          </div>
+
+          <div style="margin-bottom: 1rem;">
+            <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Email del Propietario</label>
+            <input type="email" id="client-email" class="form-input" required placeholder="gerente@elcapricho.es">
+          </div>
+
+          <div style="margin-bottom: 1rem;">
+            <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Plan de Suscripción</label>
+            <select id="client-plan" class="form-input" style="background: var(--bg-secondary);">
+              <option value="Pro - 89€/mes">Plan Pro (89 €/mes)</option>
+              <option value="Enterprise - 149€/mes">Plan Enterprise (149 €/mes)</option>
+              <option value="Trial - 14 días">Prueba Gratis (14 Días)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+            Guardar y Activar Licencia
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script src="js/store.js"></script>
+  <script>
+    let clientsData = JSON.parse(localStorage.getItem('saas_clients')) || [
+      { id: 'cli_1', name: 'La Trattoria Real', owner: 'Marco Rossi', email: 'marco@trattoriareal.com', plan: 'Plan Enterprise', fee: 149, status: 'Al día', ordersCount: 48 },
+      { id: 'cli_2', name: 'Burger & Craft Lab', owner: 'Alejandro Peña', email: 'alex@burgerlab.com', plan: 'Plan Pro', fee: 89, status: 'Al día', ordersCount: 112 },
+      { id: 'cli_3', name: 'Sakura Sushi Lounge', owner: 'Kenji Sato', email: 'contacto@sakurasushi.com', plan: 'Plan Enterprise', fee: 149, status: 'Al día', ordersCount: 84 },
+      { id: 'cli_4', name: 'Tacos & Chelas', owner: 'Gabriel Ortiz', email: 'gaby@tacoschelas.es', plan: 'Prueba (14d)', fee: 0, status: 'Trial', ordersCount: 19 }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderClientsTable();
+      updateSaaSMetrics();
+
+      window.gStore.subscribe((type) => {
+        if (type === 'new_order' || type === 'order_status_changed' || type === 'reset_data') {
+          updateSaaSMetrics();
+        }
+      });
+    });
+
+    function updateSaaSMetrics() {
+      const metrics = window.gStore.getMetrics();
+      const mrr = clientsData.reduce((sum, c) => sum + c.fee, 0);
+
+      document.getElementById('saas-mrr').textContent = `${mrr} €/mes`;
+      document.getElementById('saas-clients-count').textContent = `${clientsData.length} Locales`;
+      document.getElementById('saas-total-volume').textContent = `${metrics.totalRevenue} €`;
+      document.getElementById('saas-commissions').textContent = `${metrics.platformFee} €`;
+    }
+
+    function renderClientsTable() {
+      const tbody = document.getElementById('clients-table-body');
+      tbody.innerHTML = '';
+
+      clientsData.forEach(client => {
+        const tr = document.createElement('tr');
+        const isTrial = client.fee === 0;
+        const planClass = isTrial ? 'plan-enterprise' : 'plan-pro';
+
+        tr.innerHTML = `
+          <td><strong>${escapeHtml(client.name)}</strong></td>
+          <td><span style="color:var(--text-muted);">${escapeHtml(client.owner || client.email)}</span></td>
+          <td><span class="plan-badge ${planClass}">${client.plan}</span></td>
+          <td><strong>${client.fee} €</strong></td>
+          <td><span style="color: ${client.status === 'Al día' ? 'var(--status-ready)' : 'var(--status-pending)'}; font-weight:700;">● ${client.status}</span></td>
+          <td>${client.ordersCount} pedidos</td>
+          <td>
+            <a href="restaurante.html" class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding:4px 8px;">
+              Entrar como Admin
+            </a>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function openNewClientModal() {
+      document.getElementById('new-client-modal').classList.add('open');
+    }
+
+    function closeNewClientModal() {
+      document.getElementById('new-client-modal').classList.remove('open');
+    }
+
+    function handleCreateClient(e) {
+      e.preventDefault();
+      const name = document.getElementById('client-name').value.trim();
+      const email = document.getElementById('client-email').value.trim();
+      const planSelect = document.getElementById('client-plan').value;
+
+      let fee = 89;
+      if (planSelect.includes('149')) fee = 149;
+      if (planSelect.includes('Trial')) fee = 0;
+
+      const newCli = {
+        id: 'cli_' + Date.now(),
+        name,
+        owner: email.split('@')[0],
+        email,
+        plan: planSelect,
+        fee,
+        status: 'Al día',
+        ordersCount: 0
+      };
+
+      clientsData.unshift(newCli);
+      localStorage.setItem('saas_clients', JSON.stringify(clientsData));
+      renderClientsTable();
+      updateSaaSMetrics();
+      closeNewClientModal();
+      document.getElementById('new-client-form').reset();
+      
+      showToast(`¡Restaurante "${name}" dado de alta con éxito!`, 'success');
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      const iconSvg = type === 'success' 
+        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>'
+        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+      toast.innerHTML = `<span class="svg-icon">${iconSvg}</span><span>${escapeHtml(message)}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => { toast.remove(); }, 4000);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>"']/g, m => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      })[m]);
+    }
+  </script>
+</body>
+</html>

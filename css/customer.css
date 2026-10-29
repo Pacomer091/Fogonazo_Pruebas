@@ -1,0 +1,850 @@
+/* ====================================================================
+   FOGÓN OS - Customer Theme (Glovo-Inspired Structural Layout)
+   Clean, modern hospitality layout with restaurant's dynamic branding
+   ==================================================================== */
+
+/* Outer Layout Container */
+.glovo-wrapper {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 1.25rem 5rem;
+}
+
+/* 1. RESTAURANT HERO COVER BANNER (Glovo style) */
+.glovo-hero {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin: 1.5rem 0 1.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+}
+
+.glovo-hero-cover {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.75);
+}
+
+.glovo-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 13, 20, 0.2) 0%, rgba(10, 13, 20, 0.95) 100%);
+}
+
+.glovo-hero-card {
+  position: relative;
+  padding: 1.5rem 2rem 1.8rem;
+  margin-top: -60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.glovo-hero-info {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.glovo-restaurant-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  border: 3px solid var(--bg-primary);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 2.2rem;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--brand-gradient);
+}
+
+.glovo-meta-title h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.glovo-meta-title p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+
+.glovo-badges-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.glovo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-color);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.glovo-badge.highlight {
+  background: var(--brand-orange-glow);
+  border-color: rgba(255, 94, 54, 0.3);
+  color: var(--brand-orange-light);
+}
+
+/* Service Mode Selector (Mesa / Delivery) */
+.glovo-service-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  backdrop-filter: blur(10px);
+}
+
+.glovo-service-box select {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-size: 0.9rem;
+  font-weight: 700;
+  outline: none;
+  cursor: pointer;
+}
+
+.glovo-service-box select option {
+  background: #ffffff;
+  color: var(--text-main);
+}
+
+/* 2. STICKY CATEGORY NAV & SEARCH BAR (Glovo signature) */
+.glovo-sticky-subnav {
+  position: sticky;
+  top: 65px;
+  z-index: 80;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.75rem 0;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.glovo-categories-track {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 0;
+}
+
+.glovo-categories-track::-webkit-scrollbar {
+  display: none;
+}
+
+.glovo-cat-pill {
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.glovo-cat-pill:hover {
+  background: var(--brand-orange-tint);
+  border-color: var(--brand-orange-border);
+  color: var(--brand-orange);
+}
+
+.glovo-cat-pill.active {
+  background: var(--brand-gradient);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: var(--shadow-glow);
+}
+
+.glovo-search-box {
+  position: relative;
+  min-width: 240px;
+}
+
+.glovo-search-box input {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  padding: 7px 14px 7px 36px;
+  color: var(--text-main);
+  font-size: 0.85rem;
+  outline: none;
+  transition: var(--transition);
+}
+
+.glovo-search-box input:focus {
+  border-color: var(--brand-orange);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 85, 0, 0.12);
+}
+
+.glovo-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-dim);
+  pointer-events: none;
+}
+
+/* 3. TWO-COLUMN LAYOUT (Glovo desktop structure) */
+.glovo-columns {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .glovo-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Category Sections & Dish Cards */
+.category-section {
+  margin-bottom: 3rem;
+  scroll-margin-top: 140px;
+}
+
+.category-heading {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.category-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
+}
+
+.glovo-dishes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+/* GLOVO HORIZONTAL DISH CARD */
+.glovo-dish-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.glovo-dish-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--bg-card-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.glovo-dish-card.out-of-stock {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.dish-left-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.dish-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 0.35rem;
+  color: var(--text-main);
+}
+
+.dish-desc-text {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin-bottom: 0.75rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.dish-price-row {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dish-price-tag {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--brand-orange-light);
+}
+
+.dish-allergens-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.dish-allergen-pill {
+  font-size: 0.68rem;
+  padding: 2px 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  color: var(--text-dim);
+}
+
+/* Dish Right Thumbnail + Quick Add */
+.dish-right-thumb {
+  position: relative;
+  width: 105px;
+  height: 105px;
+  flex-shrink: 0;
+}
+
+.dish-thumb-img {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  display: block;
+}
+
+.glovo-add-btn {
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--brand-gradient);
+  border: 2px solid var(--bg-card);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.glovo-add-btn:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 15px var(--brand-orange-glow);
+}
+
+/* 4. PERSISTENT STICKY SIDEBAR CART (Glovo Desktop) */
+.glovo-sidebar-cart {
+  position: sticky;
+  top: 90px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 120px);
+}
+
+@media (max-width: 1024px) {
+  .glovo-sidebar-cart {
+    display: none;
+  }
+}
+
+.cart-sidebar-header {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cart-sidebar-header h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cart-empty-state {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--text-dim);
+}
+
+.cart-empty-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  color: var(--text-dim);
+}
+
+.cart-items-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+  margin: 0.5rem 0;
+  max-height: 280px;
+}
+
+.cart-item-glovo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.9rem;
+}
+
+.cart-item-glovo:last-child {
+  border-bottom: none;
+}
+
+.cart-item-title {
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.cart-item-price {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.cart-qty-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.cart-qty-pill button {
+  background: none;
+  border: none;
+  color: var(--text-main);
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.cart-qty-pill button:hover {
+  color: var(--brand-orange);
+}
+
+/* Cart Calculation Breakdown */
+.cart-breakdown {
+  border-top: 1px dashed var(--border-color);
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.cart-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cart-breakdown-row.total {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Pay CTA Button */
+.glovo-checkout-cta {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 800;
+  border-radius: var(--radius-md);
+  background: var(--brand-gradient);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-glow);
+  transition: var(--transition);
+}
+
+.glovo-checkout-cta:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+.glovo-checkout-cta:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 5. ACTIVE ORDER LIVE TRACKER BANNER (DESKTOP) */
+.tracking-banner {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--brand-orange);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2rem;
+  backdrop-filter: blur(12px);
+}
+
+.status-timeline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.timeline-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-dim);
+  transition: var(--transition);
+}
+
+.timeline-step.active {
+  background: var(--brand-gradient);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: var(--shadow-glow);
+}
+
+.timeline-step.done {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: var(--status-ready);
+}
+
+/* ====================================================================
+   GLOVO CUSTOMER MOBILE-FIRST RESPONSIVE ADAPTATIONS (< 768px)
+   ==================================================================== */
+@media (max-width: 768px) {
+  /* Layout wrapper */
+  .glovo-wrapper {
+    padding: 0 0.85rem 6.5rem;
+  }
+
+  /* 1. Hero Cover Banner on Mobile */
+  .glovo-hero {
+    margin: 0.75rem 0 1rem;
+    border-radius: var(--radius-md);
+  }
+
+  .glovo-hero-cover {
+    height: 130px;
+  }
+
+  .glovo-hero-card {
+    margin-top: -35px;
+    padding: 0.85rem 1rem 1.25rem;
+    gap: 1rem;
+  }
+
+  .glovo-hero-info {
+    gap: 0.85rem;
+    align-items: flex-end;
+    width: 100%;
+  }
+
+  .glovo-restaurant-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-md);
+    border-width: 2px;
+  }
+
+  .glovo-restaurant-avatar svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .glovo-meta-title {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .glovo-meta-title h1 {
+    font-size: 1.35rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .glovo-meta-title p {
+    font-size: 0.82rem;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .glovo-badges-row {
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .glovo-badge {
+    font-size: 0.72rem;
+    padding: 3px 8px;
+  }
+
+  /* Service Selector in Nav */
+  .glovo-service-box {
+    padding: 4px 8px;
+  }
+
+  .glovo-service-box select {
+    font-size: 0.8rem;
+    max-width: 130px;
+  }
+
+  /* 2. Sticky Subnav on Mobile */
+  .glovo-sticky-subnav {
+    top: 52px;
+    padding: 0.5rem 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+  }
+
+  .glovo-categories-track {
+    -webkit-overflow-scrolling: touch;
+    padding: 2px 0 4px;
+  }
+
+  .glovo-cat-pill {
+    padding: 6px 14px;
+    font-size: 0.82rem;
+  }
+
+  .glovo-search-box {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .glovo-search-box input {
+    padding: 8px 12px 8px 34px;
+    font-size: 16px !important; /* Prevents auto zoom in iOS Safari */
+  }
+
+  /* 3. Dishes Grid on Mobile */
+  .glovo-dishes-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .category-section {
+    margin-bottom: 2rem;
+    scroll-margin-top: 130px;
+  }
+
+  .category-heading {
+    font-size: 1.2rem;
+    margin-bottom: 0.85rem;
+  }
+
+  /* Horizontal Dish Card on Mobile */
+  .glovo-dish-card {
+    padding: 0.85rem;
+    gap: 0.75rem;
+    border-radius: var(--radius-md);
+  }
+
+  .dish-title {
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .dish-desc-text {
+    font-size: 0.78rem;
+    line-height: 1.35;
+    margin-bottom: 0.5rem;
+    -webkit-line-clamp: 2;
+  }
+
+  .dish-price-tag {
+    font-size: 0.95rem;
+  }
+
+  .dish-right-thumb {
+    width: 82px;
+    height: 82px;
+  }
+
+  .dish-thumb-img {
+    border-radius: var(--radius-sm);
+  }
+
+  .glovo-add-btn {
+    width: 38px;
+    height: 38px;
+    bottom: -4px;
+    right: -4px;
+  }
+
+  /* 4. Active Order Live Tracker Banner on Mobile */
+  .tracking-banner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .status-timeline {
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .timeline-step {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+  }
+
+  /* 5. Mobile Full-Width Chat Drawer */
+  .chat-drawer {
+    right: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 85vh !important;
+    max-height: 85vh !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-radius: 20px 20px 0 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
+    z-index: 1000 !important;
+  }
+
+  .chat-header {
+    padding: 1rem 1.25rem;
+    position: relative;
+  }
+
+  .chat-header::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-full);
+  }
+
+  .chat-input-area {
+    padding-bottom: max(0.85rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Extra small devices (< 420px) */
+@media (max-width: 420px) {
+  .glovo-hero-cover {
+    height: 110px;
+  }
+
+  .dish-right-thumb {
+    width: 74px;
+    height: 74px;
+  }
+
+  .dish-title {
+    font-size: 0.9rem;
+  }
+}

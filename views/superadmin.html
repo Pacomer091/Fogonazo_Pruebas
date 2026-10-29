@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Superadmin HQ — Fogonazo</title>
+  <link rel="icon" type="image/png" href="/img/logo.png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/restaurant.css">
+  <style>
+    .saas-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+    .saas-table th {
+      text-align: left;
+      padding: 12px 16px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .saas-table td {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+    .saas-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .table-scroll-hint {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .btn-text-short {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .table-scroll-hint {
+        display: flex;
+      }
+      .saas-table td {
+        padding: 12px 10px;
+        font-size: 0.82rem;
+      }
+      .saas-table th {
+        padding: 10px;
+        font-size: 0.75rem;
+      }
+      .btn-text-full {
+        display: none;
+      }
+      .btn-text-short {
+        display: inline;
+      }
+    }
+
+    /* Subscription Plan Badges */
+    .plan-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .plan-pro {
+      background: rgba(139, 92, 246, 0.15);
+      color: #a78bfa;
+      border: 1px solid rgba(139, 92, 246, 0.35);
+    }
+
+    .plan-enterprise {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    .plan-trial {
+      background: rgba(107, 114, 128, 0.15);
+      color: #9ca3af;
+      border: 1px solid rgba(107, 114, 128, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="global-nav">
+    <a href="/" class="brand-badge">
+      <div class="logo-icon" style="background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><circle cx="12" cy="11" r="3"></circle></svg>
+      </div>
+      <span>Fogón<span class="accent" style="background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">HQ</span></span>
+    </a>
+
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <a href="/api/admin/export-sql" download="fogon_export.sql" class="btn btn-secondary btn-sm" title="Descarga volcado SQL estándar para subir a Supabase o PostgreSQL">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        <span class="btn-text-full">Exportar SQL Online</span>
+        <span class="btn-text-short">SQL</span>
+      </a>
+      <button onclick="openNewTenantModal()" class="btn btn-primary btn-sm" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+        <span class="btn-text-full">+ Dar de Alta Restaurante</span>
+        <span class="btn-text-short">+ Alta</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="dashboard-container">
+    <div class="rest-header">
+      <div class="rest-title-area">
+        <h2>Panel de Control Central (Para Ti)</h2>
+        <p>Gestión de inquilinos, base de datos multi-tenant y altas de restaurantes.</p>
+      </div>
+      <div>
+        <span class="live-indicator" style="background: rgba(139, 92, 246, 0.15); color: #a78bfa;">
+          ● Superadmin Activo
+        </span>
+      </div>
+    </div>
+
+    <!-- KPIs Globales -->
+    <div class="kpi-grid">
+      <div class="glass-panel kpi-card">
+        <div class="kpi-info">
+          <span class="label">Ingresos Recurrentes (MRR)</span>
+          <h3 id="saas-mrr">0.00 €/mes</h3>
+        </div>
+        <div class="kpi-icon" style="color: #10b981; background: rgba(16, 185, 129, 0.1);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        </div>
+      </div>
+
+      <div class="glass-panel kpi-card">
+        <div class="kpi-info">
+          <span class="label">Restaurantes Clientes</span>
+          <h3 id="saas-count">0</h3>
+        </div>
+        <div class="kpi-icon" style="color: #3b82f6; background: rgba(59, 130, 246, 0.1);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="9" y1="22" x2="9" y2="16"></line><line x1="15" y1="22" x2="15" y2="16"></line></svg>
+        </div>
+      </div>
+
+      <div class="glass-panel kpi-card">
+        <div class="kpi-info">
+          <span class="label">Total Comandas Registradas</span>
+          <h3 id="saas-orders">0</h3>
+        </div>
+        <div class="kpi-icon" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Inquilinos -->
+    <div class="glass-panel" style="padding: 1.25rem; margin-top: 1.5rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 6px;">
+        <h3 style="font-size: 1.15rem; font-weight: 700;">Restaurantes Activos en Fogón</h3>
+        <div class="table-scroll-hint">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          <span>Desliza para ver más columnas</span>
+        </div>
+      </div>
+      <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+        <table class="saas-table">
+          <thead>
+            <tr>
+              <th>Restaurante</th>
+              <th>Subdominio</th>
+              <th>Plan</th>
+              <th>Cuota</th>
+              <th>Comandas</th>
+              <th>Estado</th>
+              <th>Acceso Directo</th>
+            </tr>
+          </thead>
+          <tbody id="tenants-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal Alta Restaurante -->
+  <div class="modal-overlay" id="new-tenant-modal">
+    <div class="cart-modal-content">
+      <div class="modal-header">
+        <h3 style="font-size: 1.2rem; font-weight: 800;">Alta Manual de Restaurante</h3>
+        <button onclick="closeNewTenantModal()" style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="handleCreateTenant(event)">
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted);">Nombre Comercial</label>
+            <input type="text" id="rest-name" class="form-input" required placeholder="Ej. Asador San Mamés" oninput="autoGenerateSlug(this.value)">
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted);">Subdominio (.localhost:8080)</label>
+            <input type="text" id="rest-slug" class="form-input" required placeholder="ej. asadorsanmames">
+            <span style="font-size: 0.75rem; color: var(--text-dim); display: block; margin-top: 4px;">No se permiten subdominios reservados (admin, api, etc.)</span>
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted);">Email del Propietario</label>
+            <input type="email" id="rest-email" class="form-input" required placeholder="gerente@asador.es">
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted);">Plan Fogón</label>
+            <select id="rest-plan" class="form-input" style="background: var(--bg-secondary);">
+              <option value="Pro">Plan Pro (89 €/mes)</option>
+              <option value="Enterprise">Plan Enterprise (149 €/mes)</option>
+              <option value="Trial">Prueba 14 Días (0 €)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+            Crear Inquilino y Generar Invitación
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', fetchSuperadminData);
+
+    async function fetchSuperadminData() {
+      try {
+        const res = await fetch('/api/admin/tenants');
+        if (res.ok) {
+          const tenants = await res.json();
+          renderTenants(tenants);
+        }
+      } catch (e) {}
+    }
+
+    function renderTenants(tenants) {
+      const tbody = document.getElementById('tenants-table-body');
+      tbody.innerHTML = '';
+
+      let mrr = 0;
+      let totalOrders = 0;
+
+      tenants.forEach(t => {
+        mrr += Number(t.cuota_mensual || 0);
+        totalOrders += Number(t.total_pedidos || 0);
+
+        const pLower = (t.plan_suscripcion || '').toLowerCase();
+        const planClass = pLower.includes('enterprise') ? 'plan-enterprise' : pLower.includes('trial') ? 'plan-trial' : 'plan-pro';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${escapeHtml(t.nombre)}</strong></td>
+          <td><code style="color:var(--brand-orange-light);">${t.slug}.localhost:8080</code></td>
+          <td><span class="plan-badge ${planClass}">${t.plan_suscripcion}</span></td>
+          <td><strong>${Number(t.cuota_mensual).toFixed(2)} €</strong></td>
+          <td>${t.total_pedidos} comandas</td>
+          <td><span style="color:var(--status-ready); font-weight:700;">● ${t.activo ? 'Activo' : 'Pausado'}</span></td>
+          <td>
+            <div style="display: flex; gap: 6px;">
+              <a href="http://${t.slug}.localhost:8080/" target="_blank" class="btn btn-secondary btn-sm" style="display:inline-flex; align-items:center; gap:5px; font-size:0.75rem; padding:4px 8px;">
+                <span>Carta</span>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+              </a>
+              <a href="http://${t.slug}.localhost:8080/gestion" target="_blank" class="btn btn-secondary btn-sm" style="display:inline-flex; align-items:center; gap:5px; font-size:0.75rem; padding:4px 8px; color:var(--brand-orange-light); border-color:rgba(255,94,54,0.3);">
+                <span>KDS</span>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+              </a>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('saas-mrr').textContent = `${mrr.toFixed(2)} €/mes`;
+      document.getElementById('saas-count').textContent = tenants.length;
+      document.getElementById('saas-orders').textContent = totalOrders;
+    }
+
+    function autoGenerateSlug(name) {
+      const slugInput = document.getElementById('rest-slug');
+      slugInput.value = name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "");
+    }
+
+    function openNewTenantModal() {
+      document.getElementById('new-tenant-modal').classList.add('open');
+    }
+    function closeNewTenantModal() {
+      document.getElementById('new-tenant-modal').classList.remove('open');
+    }
+
+    async function handleCreateTenant(e) {
+      e.preventDefault();
+      const name = document.getElementById('rest-name').value.trim();
+      const slug = document.getElementById('rest-slug').value.trim();
+      const email = document.getElementById('rest-email').value.trim();
+      const plan = document.getElementById('rest-plan').value;
+
+      let cuota = 89;
+      if (plan === 'Enterprise') cuota = 149;
+      if (plan === 'Trial') cuota = 0;
+
+      try {
+        const res = await fetch('/api/admin/tenants', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nombre: name,
+            slug: slug,
+            email_contacto: email,
+            nombre_dueno: name + ' Gerencia',
+            plan_suscripcion: plan,
+            cuota_mensual: cuota
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'Error al crear restaurante', 'warning');
+          return;
+        }
+
+        closeNewTenantModal();
+        fetchSuperadminData();
+        showToast(`¡Restaurante '${name}' creado! URL: http://${slug}.localhost:8080/`, 'success');
+      } catch (err) {
+        showToast('Error de red', 'warning');
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.innerHTML = `<span>●</span><span>${escapeHtml(message)}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m]);
+    }
+  </script>
+</body>
+</html>

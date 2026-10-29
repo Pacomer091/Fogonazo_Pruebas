@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Ahorro y Margen — Fogonazo</title>
+  <link rel="icon" type="image/png" href="/img/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* 1. TOP HEADER NAVIGATION */
+    .landing-top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.85rem 1.5rem;
+      width: 100%;
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.03);
+    }
+
+    .top-bar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .brand-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      transition: var(--transition);
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    .brand-link:hover {
+      transform: translateY(-1px);
+    }
+
+    .brand-logo-img {
+      height: 42px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      mix-blend-mode: multiply;
+      filter: drop-shadow(0 2px 6px rgba(255, 85, 0, 0.25));
+    }
+
+    .brand-name-text {
+      color: var(--text-main);
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .landing-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 600;
+      padding: 6px 0;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--brand-orange);
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--brand-orange);
+      border-radius: 2px;
+    }
+
+    .btn-header {
+      padding: 9px 18px !important;
+      font-size: 0.88rem !important;
+      font-weight: 700 !important;
+      border-radius: var(--radius-md) !important;
+      box-shadow: 0 4px 14px rgba(255, 85, 0, 0.22);
+    }
+
+    /* 2. HERO HEADER OF CALCULATOR PAGE */
+    .calc-page-hero {
+      text-align: center;
+      padding: 3rem 1.5rem 2rem;
+      background: radial-gradient(circle at 50% 0%, rgba(255, 122, 0, 0.08) 0%, rgba(255, 247, 237, 0.45) 35%, #ffffff 75%);
+    }
+
+    .calc-page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 13px;
+      border-radius: var(--radius-full);
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #ea580c;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.75rem;
+    }
+
+    .calc-page-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      word-spacing: 0.04em;
+      color: var(--text-main);
+      max-width: 850px;
+      margin: 0 auto 0.75rem;
+      line-height: 1.15;
+    }
+
+    .calc-page-sub {
+      color: var(--text-muted);
+      font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.55;
+      text-wrap: balance;
+    }
+
+    /* 3. CALCULATOR MAIN SECTION */
+    .calc-main-container {
+      max-width: 1200px;
+      width: calc(100% - 2rem);
+      margin: 0 auto 5rem;
+      padding: 0;
+    }
+
+    .calc-layout-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 2rem 2.25rem;
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 2.25rem;
+      box-shadow: 0 12px 36px -6px rgba(15, 23, 42, 0.06),
+                  0 2px 10px -2px rgba(15, 23, 42, 0.03);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .calc-layout-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--brand-gradient);
+    }
+
+    /* Left: Controls */
+    .calc-controls-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1.35rem;
+    }
+
+    .calc-intro-callout {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .calc-intro-callout strong {
+      color: var(--text-main);
+    }
+
+    .calc-control-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .calc-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .calc-label-row label {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .calc-val-display {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.84rem;
+      font-weight: 800;
+      color: #c2410c;
+    }
+
+    .calc-val-display.highlight {
+      background: #fff7ed;
+      border-color: #fed7aa;
+      color: #ea580c;
+    }
+
+    .calc-val-display.warning {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: #dc2626;
+    }
+
+    .calc-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: var(--radius-full);
+      background: #e2e8f0;
+      outline: none;
+      margin: 8px 0 4px;
+      cursor: pointer;
+    }
+
+    .calc-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--brand-gradient);
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(255, 85, 0, 0.35);
+      border: 2px solid #ffffff;
+      transition: transform 0.15s ease;
+    }
+
+    .calc-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.18);
+    }
+
+    .calc-range-marks {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+
+    /* Acordeón Ajustes Avanzados */
+    .calc-accordion {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-top: 0.5rem;
+      transition: var(--transition);
+    }
+
+    .calc-accordion[open] {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+    }
+
+    .accordion-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-main);
+      list-style: none;
+      transition: background-color 0.2s ease;
+    }
+
+    .accordion-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .accordion-summary:hover {
+      background: #f1f5f9;
+    }
+
+    .accordion-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .accordion-chevron {
+      color: var(--brand-orange);
+      transition: transform 0.25s ease;
+    }
+
+    .calc-accordion[open] .accordion-chevron {
+      transform: rotate(180deg);
+    }
+
+    .accordion-pill {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    .accordion-content {
+      padding: 0 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      border-top: 1px dashed var(--border-color);
+      padding-top: 14px;
+    }
+
+    .calc-assumptions-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .calc-param-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .calc-param-item label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .calc-param-item input {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 6px 9px;
+      font-size: 0.82rem;
+      color: var(--text-main);
+      font-weight: 700;
+      outline: none;
+      width: 100%;
+      transition: var(--transition);
+    }
+
+    .calc-param-item input:focus {
+      border-color: var(--brand-orange);
+      box-shadow: 0 0 0 2px rgba(255, 85, 0, 0.12);
+    }
+
+    /* Right: Results */
+    .calc-results-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .savings-highlight-card {
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border: 1px solid #a7f3d0;
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.35rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.12);
+    }
+
+    .savings-label {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #065f46;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .savings-amount {
+      font-size: clamp(1.6rem, 3.2vw, 2.1rem);
+      font-weight: 900;
+      color: #047857;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .savings-subtext {
+      font-size: 0.82rem;
+      color: #065f46;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .calc-metric-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+    }
+
+    .metric-title {
+      font-size: 0.84rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 10px;
+    }
+
+    .comparison-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .comp-bar-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .bar-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .bar-name {
+      color: var(--text-muted);
+    }
+
+    .bar-val.loss {
+      color: #dc2626;
+      font-weight: 800;
+    }
+
+    .bar-val.win {
+      color: #059669;
+      font-weight: 800;
+    }
+
+    .bar-track {
+      height: 9px;
+      background: #e2e8f0;
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .bar-fill.bar-platform {
+      background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+    }
+
+    .bar-fill.bar-fogonazo {
+      background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+    }
+
+    .bar-detail {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+    }
+
+    /* Client Cost Breakdown */
+    .client-cost-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .client-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .client-card.fogonazo {
+      border-color: #bbf7d0;
+      background: #f0fdf4;
+    }
+
+    .client-card-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .client-total-price {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--text-main);
+    }
+
+    .client-total-price.highlight {
+      color: #059669;
+    }
+
+    .client-breakdown-list {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0 0;
+      border-top: 1px solid rgba(226, 232, 240, 0.7);
+      padding-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 0.68rem;
+      color: var(--text-dim);
+    }
+
+    .client-breakdown-list li {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .client-breakdown-list strong {
+      color: var(--text-muted);
+    }
+
+    .client-tag {
+      display: inline-block;
+      font-size: 0.64rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-top: 4px;
+      text-align: center;
+    }
+
+    .client-tag.bad {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .client-tag.good {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    /* Disclaimer */
+    .calc-disclaimer {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      line-height: 1.45;
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 9px 13px;
+    }
+
+    .calc-disclaimer strong {
+      color: var(--text-muted);
+    }
+
+    /* Hablar con Fogonazo CTA */
+    .btn-hablar {
+      width: 100%;
+      padding: 14px 20px !important;
+      font-size: 1.05rem !important;
+      font-weight: 800 !important;
+      border-radius: var(--radius-md) !important;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(255, 85, 0, 0.28);
+      transition: var(--transition);
+      border: none;
+      color: #ffffff;
+      background: var(--brand-gradient);
+    }
+
+    .btn-hablar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(255, 85, 0, 0.35);
+      filter: brightness(1.04);
+    }
+
+    /* Modal Hablar con Fogonazo / WhatsApp */
+    .hablar-options-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .hablar-preview-msg {
+      background: #ffffff;
+      border: 1px dashed #cbd5e1;
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-top: 8px;
+    }
+
+    .btn-whatsapp {
+      background: #25d366;
+      color: #ffffff;
+      width: 100%;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      border-radius: var(--radius-md);
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25);
+      transition: var(--transition);
+    }
+
+    .btn-whatsapp:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 211, 102, 0.35);
+      filter: brightness(1.03);
+    }
+
+    /* Mobile Responsive (< 768px) */
+    @media (max-width: 768px) {
+      .landing-top-bar {
+        padding: 0.75rem 1rem;
+      }
+      .brand-logo-img {
+        height: 36px;
+      }
+      .brand-name-text {
+        font-size: 1.3rem;
+      }
+      .landing-nav-links {
+        display: none;
+      }
+      .btn-header {
+        padding: 8px 14px !important;
+        font-size: 0.82rem !important;
+      }
+
+      .calc-page-hero {
+        padding: 2rem 1rem 1.5rem;
+      }
+      .calc-page-title {
+        font-size: 1.7rem;
+      }
+      .calc-page-sub {
+        font-size: 0.92rem;
+      }
+
+      .calc-main-container {
+        width: 100%;
+        padding: 0 8px;
+        margin-bottom: 3.5rem;
+      }
+
+      .calc-layout-card {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 1.25rem 1rem;
+        border-radius: 12px;
+      }
+
+      .calc-assumptions-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .client-cost-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .savings-highlight-card {
+        padding: 1rem;
+      }
+
+      .savings-subtext {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. TOP HEADER NAVIGATION -->
+  <header class="landing-top-bar">
+    <div class="top-bar-inner">
+      <a href="/" class="brand-link">
+        <img src="/img/logo.png" alt="Fogonazo" class="brand-logo-img">
+        <span class="brand-name-text">Fogonazo</span>
+      </a>
+
+      <nav class="landing-nav-links">
+        <a href="/" class="nav-link">Inicio</a>
+        <a href="/calculadora" class="nav-link active">Calculadora</a>
+        <a href="/#que-incluye" class="nav-link">Qué incluye</a>
+        <a href="/#planes" class="nav-link">Precios</a>
+        <a href="http://demo.localhost:8080/" target="_blank" class="nav-link">Demo</a>
+      </nav>
+
+      <div class="top-bar-actions">
+        <button onclick="openCitaModal()" class="btn btn-primary btn-header" id="btn-header-cita">
+          <span>Pide una cita</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 2. HERO HEADER OF CALCULATOR -->
+    <section class="calc-page-hero">
+      <div class="calc-page-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><line x1="8" y1="10" x2="8.01" y2="10"></line><line x1="12" y1="10" x2="12.01" y2="10"></line><line x1="16" y1="10" x2="16.01" y2="10"></line><line x1="8" y1="14" x2="8.01" y2="14"></line><line x1="12" y1="14" x2="12.01" y2="14"></line><line x1="8" y1="18" x2="8.01" y2="18"></line><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+        Calculadora de Margen Real
+      </div>
+      <h1 class="calc-page-title">Calcula en 30 segundos cuánto dinero recuperas</h1>
+      <p class="calc-page-sub">Comprueba con los números de tu restaurante cuánto dinero vuelve a tu cuenta al gestionar tus propios pedidos sin pagar comisiones abusivas del 30%.</p>
+    </section>
+
+    <!-- 3. CALCULATOR INTERFACE (3 CAMPOS POR DEFECTO + AJUSTES AVANZADOS) -->
+    <section class="calc-main-container">
+      <div class="calc-layout-card">
+        
+        <!-- Columna Izquierda: Controles -->
+        <div class="calc-controls-col">
+          <div class="calc-intro-callout">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; margin-right:4px; color:var(--brand-orange);"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <strong>Tus datos reales:</strong> Comprueba el ahorro bruto de las comisiones que dejas de pagar y descuenta con total transparencia la cuota mensual, la pasarela de tarjeta y el envío asumido.
+          </div>
+
+          <!-- Campo 1: Pedidos totales al mes -->
+          <div class="calc-control-group">
+            <div class="calc-label-row">
+              <label for="input-orders">Pedidos totales al mes</label>
+              <span class="calc-val-display" id="display-orders">300 pedidos</span>
+            </div>
+            <input type="range" id="input-orders" min="50" max="1500" step="10" value="300" class="calc-slider" oninput="updateCalculator()">
+            <div class="calc-range-marks">
+              <span>50</span>
+              <span>750</span>
+              <span>1.500</span>
+            </div>
+          </div>
+
+          <!-- Campo 2: Ticket medio -->
+          <div class="calc-control-group">
+            <div class="calc-label-row">
+              <label for="input-ticket">Ticket medio por pedido</label>
+              <span class="calc-val-display" id="display-ticket">28,00 €</span>
+            </div>
+            <input type="range" id="input-ticket" min="12" max="70" step="1" value="28" class="calc-slider" oninput="updateCalculator()">
+            <div class="calc-range-marks">
+              <span>12,00 €</span>
+              <span>40,00 €</span>
+              <span>70,00 €</span>
+            </div>
+          </div>
+
+          <!-- Campo 3: Comisión plataforma que pagas hoy -->
+          <div class="calc-control-group">
+            <div class="calc-label-row">
+              <label for="input-commission">Comisión plataforma que pagas hoy</label>
+              <span class="calc-val-display warning" id="display-commission">30% sobre producto</span>
+            </div>
+            <input type="range" id="input-commission" min="15" max="35" step="1" value="30" class="calc-slider" oninput="updateCalculator()">
+            <div class="calc-range-marks">
+              <span>15%</span>
+              <span>ajusta según tu contrato</span>
+              <span>35%</span>
+            </div>
+          </div>
+
+          <!-- Acordeón: Ajustes Avanzados -->
+          <details class="calc-accordion" id="advanced-accordion">
+            <summary class="accordion-summary">
+              <div class="accordion-title-wrap">
+                <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <span>Ajustes avanzados (migración, pasarela y envío)</span>
+              </div>
+              <span class="accordion-pill">Personalizar</span>
+            </summary>
+
+            <div class="accordion-content">
+              <!-- Sub-control: Migración de pedidos -->
+              <div class="calc-control-group">
+                <div class="calc-label-row">
+                  <label for="input-migration">% de pedidos que pasarías a tu web</label>
+                  <span class="calc-val-display highlight" id="display-migration">40% migrados (120 pedidos)</span>
+                </div>
+                <input type="range" id="input-migration" min="10" max="80" step="5" value="40" class="calc-slider" oninput="updateCalculator()">
+                <div class="calc-range-marks">
+                  <span>10% inicial</span>
+                  <span>40% habitual</span>
+                  <span>80% fidelizado</span>
+                </div>
+              </div>
+
+              <!-- Sub-control: Pasarela y Envío -->
+              <div class="calc-assumptions-grid">
+                <!-- Pasarela de pago bancaria -->
+                <div class="calc-param-item">
+                  <label for="param-gateway-pct">Pasarela de pago (% tarjeta)</label>
+                  <input type="number" id="param-gateway-pct" value="1.4" step="0.1" min="0.5" max="3.0" oninput="updateCalculator()">
+                </div>
+                <div class="calc-param-item">
+                  <label for="param-gateway-fixed">Coste fijo pasarela (€/pedido)</label>
+                  <input type="number" id="param-gateway-fixed" value="0.18" step="0.01" min="0" max="0.50" oninput="updateCalculator()">
+                </div>
+
+                <!-- Envío conectado -->
+                <div class="calc-param-item">
+                  <label for="param-coste-real-envio">Coste real del reparto (€)</label>
+                  <input type="number" id="param-coste-real-envio" value="5.50" step="0.10" min="2.00" max="10.00" oninput="updateShippingCosts('real')">
+                </div>
+                <div class="calc-param-item">
+                  <label for="param-pago-cliente-envio">Lo que paga el cliente por envío (€)</label>
+                  <input type="number" id="param-pago-cliente-envio" value="3.50" step="0.10" min="0" max="6.00" oninput="updateShippingCosts('cliente')">
+                </div>
+                <div class="calc-param-item" style="grid-column: span 2;">
+                  <div style="background:#ffffff; border:1px solid var(--border-color); border-radius:6px; padding:6px 10px; font-size:0.75rem; color:var(--text-muted); display:flex; justify-content:space-between; align-items:center;">
+                    <span>Coste de envío asumido por tu restaurante:</span>
+                    <strong style="color:var(--brand-orange);" id="display-shipping-assumed">2,00 € / pedido</strong>
+                  </div>
+                </div>
+
+                <!-- Parámetros de plataforma para comparación -->
+                <div class="calc-param-item">
+                  <label for="param-client-fees">Tasas añadidas plataforma al cliente (€)</label>
+                  <input type="number" id="param-client-fees" value="1.80" step="0.10" min="0" max="4.00" oninput="updateCalculator()">
+                </div>
+                <div class="calc-param-item">
+                  <label for="param-min-order">Pedido mínimo recomendado (€)</label>
+                  <input type="number" id="param-min-order" value="15.00" step="1.00" min="10" max="30" oninput="updateCalculator()">
+                </div>
+
+                <!-- Cuota mensual fija Fogonazo -->
+                <div class="calc-param-item" style="grid-column: span 2;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem;">
+                    <span style="color:var(--text-muted);">Cuota fija mensual Fogonazo (Plan Pro sin permanencia):</span>
+                    <strong style="color:var(--text-main);">69,00 € / mes</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+
+        </div>
+
+        <!-- Columna Derecha: Resultados Visibles Junto a los Datos -->
+        <div class="calc-results-col">
+          
+          <!-- Tarjeta Destacada de Ahorro Estimado -->
+          <div class="savings-highlight-card" id="savings-card">
+            <div>
+              <span class="savings-label" id="display-savings-title">Ahorro estimado</span>
+              <div class="savings-amount" id="display-savings">+630,36 € / mes</div>
+            </div>
+            <div class="savings-subtext" id="display-savings-annual">
+              Equivale a <strong>7.564,32 € al año</strong> que recuperas para tu negocio
+            </div>
+          </div>
+
+          <!-- Comparativa 1: ¿Qué te cuesta gestionar estos pedidos? -->
+          <div class="calc-metric-box">
+            <h4 class="metric-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+              1. ¿Qué te cuesta gestionar estos pedidos migrados?
+            </h4>
+
+            <div class="comparison-bars">
+              <!-- Plataforma de reparto -->
+              <div class="comp-bar-item">
+                <div class="bar-header">
+                  <span class="bar-name" id="label-cost-platform">Plataforma de reparto (30% sobre 120 comandas)</span>
+                  <span class="bar-val loss" id="cost-platform">1.008,00 €</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill bar-platform" id="bar-platform" style="width: 100%;"></div>
+                </div>
+                <span class="bar-detail" id="cost-platform-desc">La plataforma se queda con 1.008,00 € de tus ventas migradas</span>
+              </div>
+
+              <!-- Fogonazo -->
+              <div class="comp-bar-item">
+                <div class="bar-header">
+                  <span class="bar-name">Fogonazo (69,00 € cuota + pasarela + envío)</span>
+                  <span class="bar-val win" id="cost-fogonazo">377,64 €</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill bar-fogonazo" id="bar-fogonazo" style="width: 37%;"></div>
+                </div>
+                <span class="bar-detail" id="cost-fogonazo-desc">69,00 € cuota + 68,64 € pasarela bancaria + 240,00 € envío asumido (2,00 €/pedido)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comparativa 2: ¿Cuánto paga tu cliente por pedido? -->
+          <div class="calc-metric-box">
+            <h4 class="metric-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span>2. ¿Cuánto paga tu cliente por un pedido de <strong id="client-ticket-ref">28,00 €</strong>?</span>
+            </h4>
+
+            <div class="client-cost-grid">
+              <div class="client-card platform">
+                <span class="client-card-title">En plataforma de reparto</span>
+                <div class="client-total-price" id="client-platform-total">33,30 €</div>
+                <ul class="client-breakdown-list">
+                  <li><span>Comida</span><strong id="client-platform-prod">28,00 €</strong></li>
+                  <li><span>Servicio + tasas</span><strong id="client-platform-fees">+1,80 €</strong></li>
+                  <li><span>Envío cliente</span><strong id="client-platform-shipping">+3,50 €</strong></li>
+                </ul>
+                <span class="client-tag bad" id="client-platform-surcharge">Sobrecoste cliente: +5,30 €</span>
+              </div>
+
+              <div class="client-card fogonazo">
+                <span class="client-card-title">En tu web Fogonazo</span>
+                <div class="client-total-price highlight" id="client-fogon-total">31,50 €</div>
+                <ul class="client-breakdown-list">
+                  <li><span>Comida</span><strong id="client-fogon-prod">28,00 €</strong></li>
+                  <li><span>Tasas añadidas</span><strong style="color:var(--status-ready);">0,00 € (Sin tasas)</strong></li>
+                  <li><span>Envío cliente</span><strong id="client-fogon-shipping">+3,50 €</strong></li>
+                </ul>
+                <span class="client-tag good" id="client-fogon-savings">Tu cliente ahorra 1,80 €</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Aviso obligatorio debajo del resultado -->
+          <div class="calc-disclaimer">
+            <strong>Aviso:</strong> Cálculo orientativo con los datos introducidos. Mantener tu presencia en plataformas de reparto puede seguir siendo útil como canal complementario para captar clientes nuevos, mientras fidelizas a los recurrentes en tu propia web sin pagar comisiones del 30%.
+          </div>
+
+          <!-- Botón "Hablar con Fogonazo" con datos incluidos -->
+          <div>
+            <button onclick="hablarConFogonazo()" class="btn btn-primary btn-hablar" id="btn-hablar-fogonazo">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+              </svg>
+              <span>Hablar con Fogonazo</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL: HABLAR CON FOGONAZO / PIDE UNA CITA -->
+  <div class="modal-overlay" id="cita-modal">
+    <div class="cart-modal-content" style="max-width: 520px;">
+      <div class="modal-header">
+        <div>
+          <h3 style="font-size: 1.25rem; font-weight: 800;">Hablar con Fogonazo</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">Comenta tus números y te asesoramos sin compromiso</p>
+        </div>
+        <button onclick="closeCitaModal()" style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="hablar-options-box">
+          <div style="font-size: 0.78rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 6px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Resumen de tu cálculo para enviar:
+          </div>
+          <div class="hablar-preview-msg" id="whatsapp-preview-text">
+            Cargando datos calculados...
+          </div>
+        </div>
+
+        <!-- Opción 1: Enviar directo por WhatsApp -->
+        <a id="btn-whatsapp-direct" href="#" target="_blank" class="btn-whatsapp">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+          </svg>
+          <span>Abrir chat de WhatsApp con mis datos</span>
+        </a>
+
+        <div style="text-align: center; font-size: 0.76rem; color: var(--text-dim); margin: 6px 0 12px;">o déjanos tus datos y te contactamos nosotros:</div>
+
+        <!-- Opción 2: Formulario tradicional -->
+        <form onsubmit="handleCitaSubmit(event)" id="cita-form">
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Tu Nombre</label>
+            <input type="text" id="cita-nombre" class="form-input" required placeholder="Ej. Javier Gómez">
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Nombre del Restaurante / Bar</label>
+            <input type="text" id="cita-restaurante" class="form-input" required placeholder="Ej. Asador La Brasa">
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Teléfono o WhatsApp</label>
+            <input type="tel" id="cita-telefono" class="form-input" required placeholder="Ej. 612 345 678">
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Plan de interés</label>
+            <select id="cita-plan" class="form-input" style="background: var(--bg-secondary);">
+              <option value="Plan Pro (69 €/mes)" selected>Plan Pro (69 €/mes)</option>
+              <option value="Plan Enterprise (149 €/mes)">Plan Enterprise (149 €/mes)</option>
+              <option value="Asesoramiento">Quiero que me asesoren primero</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 11px; font-size: 0.95rem;">
+            Solicitar llamada de asesoramiento
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="customer-footer">
+    <p>© 2026 Fogonazo — Tu propia web de pedidos, sin comisiones.</p>
+    <a href="http://admin.localhost:8080/" class="discreet-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      Panel Superadmin Fogonazo
+    </a>
+  </footer>
+
+  <div id="toast-container"></div>
+
+  <script>
+    // FORMATEADOR DE MONEDA
+    function formatCurrency(val) {
+      return Number(val).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+    }
+
+    // GESTIÓN DE COSTES DE ENVÍO CONECTADOS
+    function updateShippingCosts(source) {
+      const costeRealInput = document.getElementById('param-coste-real-envio');
+      const pagoClienteInput = document.getElementById('param-pago-cliente-envio');
+
+      let costeReal = parseFloat(costeRealInput.value) || 0;
+      let pagoCliente = parseFloat(pagoClienteInput.value) || 0;
+
+      if (source === 'cliente' && pagoCliente > costeReal) {
+        costeReal = pagoCliente;
+        costeRealInput.value = costeReal.toFixed(2);
+      } else if (source === 'real' && costeReal < pagoCliente) {
+        pagoCliente = costeReal;
+        pagoClienteInput.value = pagoCliente.toFixed(2);
+      }
+
+      const asumido = Math.max(0, costeReal - pagoCliente);
+      const displayElem = document.getElementById('display-shipping-assumed');
+      if (displayElem) {
+        displayElem.innerText = formatCurrency(asumido) + ' / pedido';
+      }
+
+      updateCalculator();
+    }
+
+    // VARIABLES GLOBALES DEL CÁLCULO PARA EL MENSAJE
+    let currentCalcSummary = {
+      orders: 300,
+      ticket: 28,
+      commission: 30,
+      migrationPct: 40,
+      pedidosWeb: 120,
+      ahorroNeto: 630.36
+    };
+
+    // FUNCIÓN PRINCIPAL DE LA CALCULADORA
+    function updateCalculator() {
+      // 1. Inputs principales (3 campos por defecto)
+      const orders = parseInt(document.getElementById('input-orders').value) || 0;
+      const ticket = parseFloat(document.getElementById('input-ticket').value) || 0;
+      const commissionPct = parseFloat(document.getElementById('input-commission').value) || 0;
+
+      // 2. Inputs avanzados (acordeón)
+      const migrationPct = parseFloat(document.getElementById('input-migration').value) || 40;
+      const gatewayPct = parseFloat(document.getElementById('param-gateway-pct').value) || 1.4;
+      const gatewayFixed = parseFloat(document.getElementById('param-gateway-fixed').value) || 0.18;
+      const costeRealEnvio = parseFloat(document.getElementById('param-coste-real-envio').value) || 5.50;
+      const pagoClienteEnvio = parseFloat(document.getElementById('param-pago-cliente-envio').value) || 3.50;
+      const clientFees = parseFloat(document.getElementById('param-client-fees').value) || 1.80;
+      const cuotaFijaFogonazo = 69.00;
+
+      // 3. Cálculos de volumen migrado
+      const pedidosWeb = Math.round(orders * (migrationPct / 100));
+      const ventasWeb = pedidosWeb * ticket;
+
+      // 4. Actualizar etiquetas de valores de entrada
+      document.getElementById('display-orders').innerText = orders + ' pedidos';
+      document.getElementById('display-ticket').innerText = formatCurrency(ticket);
+      document.getElementById('display-commission').innerText = commissionPct + '% sobre producto';
+      document.getElementById('display-migration').innerText = `${migrationPct}% migrados (${pedidosWeb} pedidos)`;
+
+      const envioAsumidoUnitario = Math.max(0, costeRealEnvio - pagoClienteEnvio);
+      const displayEnvio = document.getElementById('display-shipping-assumed');
+      if (displayEnvio) {
+        displayEnvio.innerText = formatCurrency(envioAsumidoUnitario) + ' / pedido';
+      }
+
+      // 5. Costes de la plataforma de reparto
+      const costePlataforma = ventasWeb * (commissionPct / 100);
+
+      // 6. Costes reales de Fogonazo
+      const costePasarela = (ventasWeb * (gatewayPct / 100)) + (pedidosWeb * gatewayFixed);
+      const costeEnvioRestTotal = pedidosWeb * envioAsumidoUnitario;
+      const costeFogonazoTotal = cuotaFijaFogonazo + costePasarela + costeEnvioRestTotal;
+
+      // 7. Ahorro neto estimado
+      const ahorroNetoMensual = costePlataforma - costeFogonazoTotal;
+      const ahorroAnual = ahorroNetoMensual * 12;
+
+      // Guardar resumen para el mensaje de WhatsApp
+      currentCalcSummary = {
+        orders,
+        ticket,
+        commission: commissionPct,
+        migrationPct,
+        pedidosWeb,
+        ahorroNeto: ahorroNetoMensual
+      };
+
+      // 8. Actualizar tarjeta destacada de ahorro
+      const displaySavings = document.getElementById('display-savings');
+      const displaySavingsAnnual = document.getElementById('display-savings-annual');
+      const displaySavingsTitle = document.getElementById('display-savings-title');
+      const savingsCard = document.getElementById('savings-card');
+
+      if (ahorroNetoMensual > 0) {
+        displaySavingsTitle.innerText = 'Ahorro estimado';
+        displaySavings.innerText = '+' + formatCurrency(ahorroNetoMensual) + ' / mes';
+        displaySavings.style.color = '#047857';
+        displaySavingsAnnual.innerHTML = `Equivale a <strong>${formatCurrency(ahorroAnual)} al año</strong> que recuperas para tu negocio`;
+        if (savingsCard) {
+          savingsCard.style.background = 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)';
+          savingsCard.style.borderColor = '#a7f3d0';
+        }
+      } else {
+        displaySavingsTitle.innerText = 'Volumen bajo para amortizar';
+        displaySavings.innerText = formatCurrency(ahorroNetoMensual) + ' / mes';
+        displaySavings.style.color = '#b91c1c';
+        displaySavingsAnnual.innerHTML = `Con solo <strong>${pedidosWeb} pedidos al mes</strong> en tu web, la cuota fija supera la comisión evitada. Te recomendamos migrar más pedidos.`;
+        if (savingsCard) {
+          savingsCard.style.background = 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)';
+          savingsCard.style.borderColor = '#fecaca';
+        }
+      }
+
+      // 9. Actualizar Métrica 1 (Barras de coste)
+      document.getElementById('label-cost-platform').innerText = `Plataforma de reparto (${commissionPct}% sobre ${pedidosWeb} comandas)`;
+      document.getElementById('cost-platform').innerText = formatCurrency(costePlataforma);
+      document.getElementById('cost-platform-desc').innerText = `La plataforma se queda con ${formatCurrency(costePlataforma)} de tus ventas migradas`;
+
+      document.getElementById('cost-fogonazo').innerText = formatCurrency(costeFogonazoTotal);
+      document.getElementById('cost-fogonazo-desc').innerText = `${formatCurrency(cuotaFijaFogonazo)} cuota + ${formatCurrency(costePasarela)} pasarela bancaria + ${formatCurrency(costeEnvioRestTotal)} envío asumido (${formatCurrency(envioAsumidoUnitario)}/pedido)`;
+
+      // Ancho de barras
+      const maxVal = Math.max(costePlataforma, costeFogonazoTotal, 1);
+      const widthPlatform = Math.min(100, Math.round((costePlataforma / maxVal) * 100));
+      const widthFogonazo = Math.min(100, Math.round((costeFogonazoTotal / maxVal) * 100));
+      document.getElementById('bar-platform').style.width = widthPlatform + '%';
+      document.getElementById('bar-fogonazo').style.width = widthFogonazo + '%';
+
+      // 10. Actualizar Métrica 2 (Coste para el cliente)
+      document.getElementById('client-ticket-ref').innerText = formatCurrency(ticket);
+      document.getElementById('client-platform-prod').innerText = formatCurrency(ticket);
+      document.getElementById('client-platform-fees').innerText = '+' + formatCurrency(clientFees);
+      document.getElementById('client-platform-shipping').innerText = '+' + formatCurrency(pagoClienteEnvio);
+      const totalClientePlataforma = ticket + clientFees + pagoClienteEnvio;
+      document.getElementById('client-platform-total').innerText = formatCurrency(totalClientePlataforma);
+      const sobrecosteCliente = clientFees;
+      document.getElementById('client-platform-surcharge').innerText = `Sobrecoste cliente: +${formatCurrency(sobrecosteCliente)}`;
+
+      document.getElementById('client-fogon-prod').innerText = formatCurrency(ticket);
+      document.getElementById('client-fogon-shipping').innerText = '+' + formatCurrency(pagoClienteEnvio);
+      const totalClienteFogonazo = ticket + pagoClienteEnvio;
+      document.getElementById('client-fogon-total').innerText = formatCurrency(totalClienteFogonazo);
+      document.getElementById('client-fogon-savings').innerText = `Tu cliente ahorra ${formatCurrency(sobrecosteCliente)}`;
+    }
+
+    // ACCIÓN: HABLAR CON FOGONAZO
+    function hablarConFogonazo() {
+      const msg = `Hola Fogonazo, he calculado mi ahorro en vuestra web: tengo unos ${currentCalcSummary.orders} pedidos/mes con ticket medio de ${formatCurrency(currentCalcSummary.ticket)} pagando un ${currentCalcSummary.commission}% de comisión. Mi ahorro estimado es de +${formatCurrency(currentCalcSummary.ahorroNeto)}/mes. Me gustaría hablar sobre cómo implantarlo en mi restaurante.`;
+      
+      const previewElem = document.getElementById('whatsapp-preview-text');
+      if (previewElem) {
+        previewElem.innerText = `"${msg}"`;
+      }
+
+      const whatsappBtn = document.getElementById('btn-whatsapp-direct');
+      if (whatsappBtn) {
+        whatsappBtn.href = 'https://api.whatsapp.com/send?phone=34612345678&text=' + encodeURIComponent(msg);
+      }
+
+      openCitaModal();
+    }
+
+    // MODAL DE CITA
+    function openCitaModal() {
+      const modal = document.getElementById('cita-modal');
+      if (modal) modal.classList.add('open');
+    }
+
+    function closeCitaModal() {
+      const modal = document.getElementById('cita-modal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    document.getElementById('cita-modal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'cita-modal') closeCitaModal();
+    });
+
+    function handleCitaSubmit(e) {
+      e.preventDefault();
+      const nombre = document.getElementById('cita-nombre').value.trim();
+      const restaurante = document.getElementById('cita-restaurante').value.trim();
+      const telefono = document.getElementById('cita-telefono').value.trim();
+
+      closeCitaModal();
+      document.getElementById('cita-form')?.reset();
+
+      showToast(`¡Solicitud enviada, ${nombre}! Nos pondremos en contacto con ${restaurante} en menos de 2 horas.`, 'success');
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      const iconSvg = type === 'success'
+        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>'
+        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line></svg>';
+      toast.innerHTML = `<span class="svg-icon">${iconSvg}</span><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 4500);
+    }
+
+    // Inicializar cálculo
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCalculator();
+    });
+  </script>
+</body>
+</html>

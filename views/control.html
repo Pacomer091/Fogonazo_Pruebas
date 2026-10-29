@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Control de Comandas — {{RESTAURANTE_NOMBRE}}</title>
+  <link rel="icon" type="image/png" href="/img/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    :root {
+      --brand-orange: {{COLOR_PRIMARIO}};
+      --brand-orange-light: {{COLOR_SECUNDARIO}};
+      --brand-gradient: linear-gradient(135deg, {{COLOR_PRIMARIO}} 0%, {{COLOR_SECUNDARIO}} 100%);
+    }
+
+    body {
+      background: #f8fafc;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      margin: 0;
+      padding: 0;
+    }
+
+    .control-header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .restaurant-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .restaurant-logo {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .restaurant-title {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--text-main);
+      margin: 0;
+    }
+
+    .role-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #ea580c;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .control-container {
+      max-width: 1200px;
+      margin: 2rem auto 4rem;
+      padding: 0 1.25rem;
+    }
+
+    .control-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 900;
+      margin: 0;
+      color: var(--text-main);
+    }
+
+    .live-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #059669;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    .orders-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .order-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .order-card.status-recibido {
+      border-left: 4px solid #3b82f6;
+    }
+
+    .order-card.status-cocina {
+      border-left: 4px solid #ff5500;
+    }
+
+    .order-card.status-listo {
+      border-left: 4px solid #10b981;
+    }
+
+    .order-card.status-entregado {
+      border-left: 4px solid #64748b;
+      opacity: 0.7;
+    }
+
+    .order-card.status-cancelado {
+      border-left: 4px solid #ef4444;
+      opacity: 0.6;
+    }
+
+    .order-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 8px;
+    }
+
+    .order-num {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--text-main);
+    }
+
+    .service-badge {
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .service-delivery {
+      background: #ffedd5;
+      color: #ea580c;
+    }
+
+    .service-recogida {
+      background: #e0f2fe;
+      color: #0284c7;
+    }
+
+    .client-details {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+
+    .client-name {
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .client-phone {
+      color: var(--text-muted);
+    }
+
+    .client-address {
+      color: #b45309;
+      font-weight: 600;
+      margin-top: 3px;
+    }
+
+    .client-notes {
+      color: #0369a1;
+      font-style: italic;
+      margin-top: 3px;
+    }
+
+    .order-items-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .order-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      font-size: 0.85rem;
+      line-height: 1.35;
+    }
+
+    .item-qty-name {
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+    }
+
+    .item-qty {
+      font-weight: 900;
+      color: var(--brand-orange);
+      background: #fff7ed;
+      padding: 0 5px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+
+    .item-extras-list {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      padding-left: 24px;
+    }
+
+    .order-total-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 8px;
+      border-top: 1px dashed #e2e8f0;
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+
+    .order-actions-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .btn-status {
+      padding: 7px 6px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-status:hover {
+      background: #f1f5f9;
+      transform: translateY(-1px);
+    }
+
+    .btn-status.active-recibido {
+      background: #dbeafe;
+      border-color: #3b82f6;
+      color: #1d4ed8;
+    }
+
+    .btn-status.active-cocina {
+      background: #ffedd5;
+      border-color: #ff5500;
+      color: #c2410c;
+    }
+
+    .btn-status.active-listo {
+      background: #dcfce7;
+      border-color: #10b981;
+      color: #15803d;
+    }
+
+    .btn-status.active-entregado {
+      background: #f1f5f9;
+      border-color: #64748b;
+      color: #334155;
+    }
+
+    .btn-status.btn-cancel {
+      grid-column: span 3;
+      color: #dc2626;
+      border-color: #fca5a5;
+      background: #fff5f5;
+    }
+
+    .btn-status.btn-cancel:hover {
+      background: #fee2e2;
+    }
+
+    .empty-orders {
+      text-align: center;
+      padding: 4rem 1rem;
+      color: var(--text-muted);
+      grid-column: 1 / -1;
+    }
+
+    .tracking-link-btn {
+      font-size: 0.75rem;
+      color: var(--brand-orange);
+      text-decoration: none;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .tracking-link-btn:hover {
+      text-decoration: underline;
+    }
+
+    .btn-delete-order {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #dc2626;
+      background: #fff5f5;
+      border: 1px solid #fecaca;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+    }
+
+    .btn-delete-order:hover {
+      background: #fee2e2;
+      border-color: #f87171;
+    }
+
+    .btn-delete-order:active {
+      transform: scale(0.96);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="control-header">
+    <div class="header-inner">
+      <div class="restaurant-brand">
+        <a href="/" style="display:flex; align-items:center; gap:8px; text-decoration:none;">
+          <img src="/img/logo.png" alt="Fogonazo" class="restaurant-logo">
+          <h1 class="restaurant-title">{{RESTAURANTE_NOMBRE}}</h1>
+        </a>
+        <span class="role-badge">Panel de Control Rápido</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span class="live-status-pill">
+          <span class="pulse-dot"></span>
+          Conexión en vivo
+        </span>
+        <a href="/" target="_blank" class="btn btn-secondary btn-sm" style="display:inline-flex; align-items:center; gap:6px;">
+          <span>Ver Carta Cliente</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="control-container">
+    <div class="control-top-bar">
+      <div>
+        <h2 class="page-title">Gestión de Comandas</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 3px 0 0 0;">
+          Cambia el estado de una comanda o elimínala. La pantalla de seguimiento del cliente se actualizará en tiempo real.
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button onclick="loadOrders()" class="btn btn-secondary btn-sm" style="display:inline-flex; align-items:center; gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+          <span>Refrescar</span>
+        </button>
+        <button onclick="confirmClearCompleted()" class="btn btn-secondary btn-sm" style="display:inline-flex; align-items:center; gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span>Limpiar entregadas</span>
+        </button>
+        <button onclick="confirmClearAll()" class="btn btn-secondary btn-sm" style="display:inline-flex; align-items:center; gap:6px; color:#dc2626; border-color:#fca5a5; background:#fff5f5;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          <span>Borrar todas</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="orders-grid" id="orders-container">
+      <div class="empty-orders">Cargando comandas en vivo...</div>
+    </div>
+  </main>
+
+  <div id="toast-container"></div>
+
+  <script>
+    const REST_ID = "{{RESTAURANTE_ID}}";
+    let ordersList = [];
+
+    async function loadOrders() {
+      try {
+        const res = await fetch('/api/admin/orders');
+        if (!res.ok) throw new Error('Error al cargar comandas');
+        ordersList = await res.json();
+        renderOrders();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderOrders() {
+      const container = document.getElementById('orders-container');
+      if (!container) return;
+
+      if (!ordersList || ordersList.length === 0) {
+        container.innerHTML = `
+          <div class="empty-orders">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.8" style="margin-bottom:8px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+            <p style="font-weight:700; color:var(--text-main); margin:0;">No hay comandas activas</p>
+            <span style="font-size:0.82rem;">Los nuevos pedidos de tus clientes aparecerán aquí automáticamente.</span>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = ordersList.map(order => {
+        const estado = order.estado || 'recibido';
+        const serviceLabel = order.tipo_servicio === 'delivery' ? 'Domicilio' : 'Recogida';
+        const serviceClass = order.tipo_servicio === 'delivery' ? 'service-delivery' : 'service-recogida';
+
+        const linesHtml = (order.lineas || []).map(line => {
+          const extrasText = (line.extras || []).map(e => e.opcion_nombre).join(', ');
+          return `
+            <li class="order-item-row">
+              <div>
+                <div class="item-qty-name">
+                  <span class="item-qty">${line.cantidad}x</span>
+                  <span><strong>${line.nombre_producto}</strong></span>
+                </div>
+                ${extrasText ? `<div class="item-extras-list">+ ${extrasText}</div>` : ''}
+              </div>
+              <span style="font-weight:700; font-size:0.82rem;">${(line.total_linea_cents / 100).toFixed(2)} €</span>
+            </li>
+          `;
+        }).join('');
+
+        return `
+          <div class="order-card status-${estado}" id="card-${order.id}">
+            <div class="order-card-header">
+              <div>
+                <span class="order-num">#${order.numero_comanda}</span>
+                <span style="font-size:0.75rem; color:var(--text-muted); margin-left:6px;">${new Date(order.created_at).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span class="service-badge ${serviceClass}">${serviceLabel}</span>
+                <button onclick="confirmDeleteOrder('${order.id}', '${order.numero_comanda}')" class="btn-delete-order" title="Borrar comanda #${order.numero_comanda}">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                  <span>Borrar</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="client-details">
+              <div class="client-name">${order.cliente_nombre} • <span class="client-phone">${order.cliente_telefono}</span></div>
+              ${order.direccion_entrega ? `<div class="client-address">Entrega: ${order.direccion_entrega}</div>` : ''}
+              ${order.notas_cliente ? `<div class="client-notes">Nota: "${order.notas_cliente}"</div>` : ''}
+            </div>
+
+            <ul class="order-items-list">
+              ${linesHtml}
+            </ul>
+
+            <div class="order-total-bar">
+              <span style="color:var(--text-muted); font-size:0.82rem;">Total comanda</span>
+              <span style="color:var(--brand-orange); font-size:1.1rem;">${order.total_formatted}</span>
+            </div>
+
+            <div>
+              <a href="/pedido/${order.tracking_token}" target="_blank" class="tracking-link-btn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <span>Ver pantalla de seguimiento del cliente</span>
+              </a>
+            </div>
+
+            <!-- Botones de cambio de estado de un solo toque -->
+            <div class="order-actions-bar">
+              <button onclick="setOrderStatus('${order.id}', 'recibido')" class="btn-status ${estado === 'recibido' ? 'active-recibido' : ''}">
+                <span>Recibido</span>
+              </button>
+              <button onclick="setOrderStatus('${order.id}', 'cocina')" class="btn-status ${estado === 'cocina' ? 'active-cocina' : ''}">
+                <span>En Cocina</span>
+              </button>
+              <button onclick="setOrderStatus('${order.id}', 'listo')" class="btn-status ${estado === 'listo' ? 'active-listo' : ''}">
+                <span>Listo</span>
+              </button>
+              <button onclick="setOrderStatus('${order.id}', 'entregado')" class="btn-status ${estado === 'entregado' ? 'active-entregado' : ''}" style="grid-column: span 2;">
+                <span>Entregado</span>
+              </button>
+              <button onclick="setOrderStatus('${order.id}', 'cancelado')" class="btn-status btn-cancel" style="grid-column: span 1;">
+                <span>Cancelar</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function setOrderStatus(orderId, nuevoEstado) {
+      try {
+        const res = await fetch(`/api/admin/orders/${orderId}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nuevoEstado })
+        });
+        if (!res.ok) throw new Error('Error al actualizar estado');
+
+        // Actualiza en memoria
+        const ord = ordersList.find(o => o.id === orderId);
+        if (ord) ord.estado = nuevoEstado;
+        renderOrders();
+
+        showToast(`Comanda #${ord ? ord.numero_comanda : ''} actualizada a '${nuevoEstado}'. El cliente ya lo ve en su pantalla.`);
+      } catch (err) {
+        showToast('Error al actualizar comanda: ' + err.message, 'error');
+      }
+    }
+
+    async function confirmDeleteOrder(orderId, orderNum) {
+      if (!confirm(`¿Estás seguro de que quieres borrar la comanda #${orderNum}? Esta acción no se puede deshacer.`)) {
+        return;
+      }
+      try {
+        const res = await fetch(`/api/admin/orders/${orderId}`, {
+          method: 'DELETE'
+        });
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || 'Error al borrar comanda');
+        }
+        ordersList = ordersList.filter(o => o.id !== orderId);
+        renderOrders();
+        showToast(`Comanda #${orderNum} borrada correctamente`);
+      } catch (err) {
+        showToast('Error al borrar comanda: ' + err.message, 'error');
+      }
+    }
+
+    async function confirmClearCompleted() {
+      const completedCount = ordersList.filter(o => o.estado === 'entregado' || o.estado === 'cancelado').length;
+      if (completedCount === 0) {
+        showToast('No hay comandas entregadas o canceladas para limpiar.', 'info');
+        return;
+      }
+      if (!confirm(`¿Deseas eliminar las ${completedCount} comandas entregadas o canceladas?`)) {
+        return;
+      }
+      try {
+        const res = await fetch('/api/admin/orders/clear', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filter: 'completed' })
+        });
+        if (!res.ok) throw new Error('Error al limpiar comandas');
+        await loadOrders();
+        showToast(`${completedCount} comandas finalizadas eliminadas`);
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    async function confirmClearAll() {
+      if (ordersList.length === 0) {
+        showToast('No hay comandas para borrar.', 'info');
+        return;
+      }
+      if (!confirm(`¿Estás seguro de que deseas BORRAR TODAS las ${ordersList.length} comandas del panel?`)) {
+        return;
+      }
+      try {
+        const res = await fetch('/api/admin/orders/clear', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filter: 'all' })
+        });
+        if (!res.ok) throw new Error('Error al vaciar comandas');
+        ordersList = [];
+        renderOrders();
+        showToast('Todas las comandas han sido eliminadas');
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3500);
+    }
+
+    // SSE en vivo
+    function initSSE() {
+      const evtSource = new EventSource('/api/events');
+      evtSource.onmessage = (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          if (data.type === 'new_order' || data.type === 'order_status' || data.type === 'order_deleted' || data.type === 'orders_cleared') {
+            loadOrders();
+          }
+        } catch (_) {}
+      };
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadOrders();
+      initSSE();
+      // Polling de respaldo cada 8 segundos
+      setInterval(loadOrders, 8000);
+    });
+  </script>
+</body>
+</html>

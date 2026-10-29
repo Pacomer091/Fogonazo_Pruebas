@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Cocina & Gestión — {{RESTAURANTE_NOMBRE}} | Fogonazo</title>
+  <link rel="icon" type="image/png" href="/img/logo.png">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/restaurant.css">
+  <style>
+    :root {
+      --brand-orange: {{COLOR_PRIMARIO}};
+      --brand-orange-light: {{COLOR_SECUNDARIO}};
+      --brand-gradient: linear-gradient(135deg, {{COLOR_PRIMARIO}} 0%, {{COLOR_SECUNDARIO}} 100%);
+    }
+    .svg-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Global Nav -->
+  <header class="global-nav">
+    <a href="/" class="brand-badge">
+      <div class="logo-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3.5z"></path></svg>
+      </div>
+      <span>{{RESTAURANTE_NOMBRE}} <span class="accent">KDS</span></span>
+    </a>
+
+    <div class="nav-actions">
+      <a href="/" target="_blank" class="btn btn-secondary btn-sm" title="Abrir carta de clientes" style="display: inline-flex; align-items: center; gap: 6px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        <span class="btn-text-full">Ver Carta</span>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+      </a>
+      <button onclick="openStockModal()" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; gap: 6px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg>
+        <span class="btn-text-full">Pausar Stock</span>
+        <span class="btn-text-short">Stock</span>
+      </button>
+      <div class="live-indicator">
+        <span class="pulse-dot"></span>
+        EN VIVO
+      </div>
+    </div>
+  </header>
+
+  <!-- Main KDS Dashboard -->
+  <main class="dashboard-container">
+    <div class="rest-header">
+      <div class="rest-title-area">
+        <h2>Monitor de Pedidos y Cocina</h2>
+        <p>Aislamiento estricto de datos: {{RESTAURANTE_NOMBRE}} (Subdominio: {{RESTAURANTE_SLUG}})</p>
+      </div>
+    </div>
+
+    <!-- KPIs de Ventas y Comandas -->
+    <div class="kpi-grid">
+      <div class="glass-panel kpi-card">
+        <div class="kpi-info">
+          <span class="label">Ventas Hoy</span>
+          <h3 id="kds-revenue">0.00 €</h3>
+        </div>
+        <div class="kpi-icon" style="color: #10b981; background: rgba(16, 185, 129, 0.1);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        </div>
+      </div>
+
+      <div class="glass-panel kpi-card">
+        <div class="kpi-info">
+          <span class="label">En Cocina Activos</span>
+          <h3 id="kds-active-count">0</h3>
+        </div>
+        <div class="kpi-icon" style="color: #3b82f6; background: rgba(59, 130, 246, 0.1);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3.5z"></path></svg>
+        </div>
+      </div>
+
+      <div class="glass-panel kpi-card">
+        <div class="kpi-info">
+          <span class="label">Ticket Medio</span>
+          <h3 id="kds-avg-ticket">0.00 €</h3>
+        </div>
+        <div class="kpi-icon" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+        </div>
+      </div>
+
+      <div class="glass-panel kpi-card">
+        <div class="kpi-info">
+          <span class="label">Total Comandas</span>
+          <h3 id="kds-total-orders">0</h3>
+        </div>
+        <div class="kpi-icon" style="color: #a855f7; background: rgba(168, 85, 247, 0.1);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Column Selector Tabs (Visible only on screens <= 768px) -->
+    <div class="mobile-kds-tabs" id="mobile-kds-tabs">
+      <button class="kds-tab-btn active" id="tab-col-pending" onclick="selectKdsColumn('pending')">
+        <span class="tab-indicator" style="background: var(--status-pending);"></span>
+        <span>Nuevos</span>
+        <span class="kds-tab-pill" id="mob-count-pending">0</span>
+      </button>
+      <button class="kds-tab-btn" id="tab-col-cooking" onclick="selectKdsColumn('cooking')">
+        <span class="tab-indicator" style="background: var(--status-cooking);"></span>
+        <span>En Cocina</span>
+        <span class="kds-tab-pill" id="mob-count-cooking">0</span>
+      </button>
+      <button class="kds-tab-btn" id="tab-col-ready" onclick="selectKdsColumn('ready')">
+        <span class="tab-indicator" style="background: var(--status-ready);"></span>
+        <span>Listos</span>
+        <span class="kds-tab-pill" id="mob-count-ready">0</span>
+      </button>
+    </div>
+
+    <!-- Kanban KDS -->
+    <div class="orders-board">
+      <div class="column" id="col-pending">
+        <div class="column-header">
+          <span class="column-title" style="color: var(--status-pending);">Nuevos Pedidos</span>
+          <span class="column-count" id="count-pending">0</span>
+        </div>
+        <div class="order-list" id="list-pending"></div>
+      </div>
+
+      <div class="column" id="col-cooking">
+        <div class="column-header">
+          <span class="column-title" style="color: var(--status-cooking);">En Cocina</span>
+          <span class="column-count" id="count-cooking">0</span>
+        </div>
+        <div class="order-list" id="list-cooking"></div>
+      </div>
+
+      <div class="column" id="col-ready">
+        <div class="column-header">
+          <span class="column-title" style="color: var(--status-ready);">Listos para Servir</span>
+          <span class="column-count" id="count-ready">0</span>
+        </div>
+        <div class="order-list" id="list-ready"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal Pausar Stock / Platos Agotados -->
+  <div class="modal-overlay" id="stock-modal">
+    <div class="cart-modal-content" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; font-weight: 800;">Gestión de Platos & Stock en Vivo</h3>
+        <button onclick="closeStockModal()" style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;">&times;</button>
+      </div>
+      <div class="modal-body" id="stock-products-list"></div>
+    </div>
+  </div>
+
+  <!-- Chat Drawer -->
+  <div class="chat-drawer" id="kds-chat-drawer">
+    <div class="chat-header">
+      <div>
+        <h4 id="kds-chat-title" style="font-size: 0.95rem; font-weight: 700;">Chat con Cliente</h4>
+        <span id="kds-chat-sub" style="font-size: 0.75rem; color: var(--text-muted);">Comanda</span>
+      </div>
+      <button onclick="closeKdsChat()" style="background:none; border:none; color:var(--text-muted); font-size:1.4rem; cursor:pointer;">&times;</button>
+    </div>
+    <div class="chat-body" id="kds-chat-messages"></div>
+    <form class="chat-input-area" id="kds-chat-form" onsubmit="sendKdsChatMessage(event)">
+      <input type="text" id="kds-chat-input" class="chat-input" placeholder="Escribe al cliente..." autocomplete="off">
+      <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
+    </form>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script>
+    const RESTAURANTE_ID = "{{RESTAURANTE_ID}}";
+    let activeChatOrderId = null;
+    let ordersCache = [];
+    let currentMobileTab = 'pending';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      selectKdsColumn('pending');
+      fetchOrders();
+      initKdsSSE();
+    });
+
+    window.selectKdsColumn = function(col) {
+      currentMobileTab = col;
+      ['pending', 'cooking', 'ready'].forEach(c => {
+        const btn = document.getElementById(`tab-col-${c}`);
+        const column = document.getElementById(`col-${c}`);
+        if (btn) btn.classList.toggle('active', c === col);
+        if (column) column.classList.toggle('mobile-active', c === col);
+      });
+    };
+
+    async function fetchOrders() {
+      try {
+        const res = await fetch('/api/admin/orders');
+        if (res.ok) {
+          ordersCache = await res.json();
+          renderOrders();
+        }
+      } catch (e) {}
+    }
+
+    function renderOrders() {
+      const listP = document.getElementById('list-pending');
+      const listC = document.getElementById('list-cooking');
+      const listR = document.getElementById('list-ready');
+
+      listP.innerHTML = '';
+      listC.innerHTML = '';
+      listR.innerHTML = '';
+
+      let cP = 0, cC = 0, cR = 0;
+      let totalRev = 0;
+
+      ordersCache.forEach(order => {
+        if (order.estado !== 'cancelado') totalRev += Number(order.total);
+        if (order.estado === 'entregado' || order.estado === 'cancelado') return;
+
+        const card = document.createElement('div');
+        card.className = `order-card ${order.estado === 'pendiente' ? 'priority' : ''}`;
+
+        const isDelivery = order.tipo_servicio === 'delivery';
+        const locationBadge = isDelivery ? `Reparto: ${order.direccion_entrega || 'Domicilio'}` : `${order.mesa || 'Mesa General'}`;
+
+        const itemsHtml = (order.lineas || []).map(l => `
+          <div class="order-item-row">
+            <span><span class="order-item-qty">${l.cantidad}x</span> ${escapeHtml(l.nombre_producto)}</span>
+            <span style="color:var(--text-muted);">${l.total_linea.toFixed(2)} €</span>
+          </div>
+        `).join('');
+
+        let actions = '';
+        if (order.estado === 'pendiente') {
+          actions = `<button onclick="changeOrderStatus('${order.id}', 'cocina')" class="btn btn-primary btn-sm" style="display:inline-flex; align-items:center; justify-content:center; gap:5px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3.5z"></path></svg>
+            <span>A Cocina</span>
+          </button>`;
+        } else if (order.estado === 'cocina') {
+          actions = `<button onclick="changeOrderStatus('${order.id}', 'listo')" class="btn btn-primary btn-sm" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); display:inline-flex; align-items:center; justify-content:center; gap:5px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Listo</span>
+          </button>`;
+        } else if (order.estado === 'listo') {
+          actions = `<button onclick="changeOrderStatus('${order.id}', 'entregado')" class="btn btn-secondary btn-sm" style="color: var(--status-delivered); border-color: rgba(139, 92, 246, 0.4); display:inline-flex; align-items:center; justify-content:center; gap:5px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <span>Entregado</span>
+          </button>`;
+        }
+
+        card.innerHTML = `
+          <div class="order-top">
+            <div>
+              <span class="order-id">#${order.numero_comanda}</span>
+              <div class="order-customer-info"><strong>${escapeHtml(order.cliente_nombre)}</strong></div>
+            </div>
+            <span class="order-time">${order.metodo_pago.toUpperCase()}</span>
+          </div>
+          <div style="display: flex; gap: 6px; margin-bottom: 0.6rem;">
+            <span class="order-tag">${locationBadge}</span>
+          </div>
+          <div class="order-items-list">${itemsHtml}</div>
+          ${order.notas_cliente ? `<div class="order-note">Nota: ${escapeHtml(order.notas_cliente)}</div>` : ''}
+          <div class="order-footer">
+            <span class="order-price">${Number(order.total).toFixed(2)} €</span>
+            <div class="order-actions">
+              <button onclick="openKdsChat('${order.id}', '${escapeHtml(order.cliente_nombre)}', '${order.numero_comanda}')" class="btn btn-secondary btn-sm" style="display:inline-flex; align-items:center; justify-content:center; gap:5px;">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                <span>Chat</span>
+              </button>
+              ${actions}
+            </div>
+          </div>
+        `;
+
+        if (order.estado === 'pendiente') { listP.appendChild(card); cP++; }
+        else if (order.estado === 'cocina') { listC.appendChild(card); cC++; }
+        else if (order.estado === 'listo') { listR.appendChild(card); cR++; }
+      });
+
+      document.getElementById('count-pending').textContent = cP;
+      document.getElementById('count-cooking').textContent = cC;
+      document.getElementById('count-ready').textContent = cR;
+
+      const mobP = document.getElementById('mob-count-pending');
+      const mobC = document.getElementById('mob-count-cooking');
+      const mobR = document.getElementById('mob-count-ready');
+      if (mobP) mobP.textContent = cP;
+      if (mobC) mobC.textContent = cC;
+      if (mobR) mobR.textContent = cR;
+
+      // Ensure active column is kept in sync
+      selectKdsColumn(currentMobileTab);
+
+      document.getElementById('kds-revenue').textContent = `${totalRev.toFixed(2)} €`;
+      document.getElementById('kds-active-count').textContent = cC;
+      document.getElementById('kds-total-orders').textContent = ordersCache.length;
+      document.getElementById('kds-avg-ticket').textContent = ordersCache.length ? `${(totalRev / ordersCache.length).toFixed(2)} €` : '0.00 €';
+
+      if (cP === 0) listP.innerHTML = '<div style="text-align:center; color:var(--text-dim); padding:2rem 0; font-size:0.85rem;">No hay pedidos pendientes</div>';
+      if (cC === 0) listC.innerHTML = '<div style="text-align:center; color:var(--text-dim); padding:2rem 0; font-size:0.85rem;">Cocina libre</div>';
+      if (cR === 0) listR.innerHTML = '<div style="text-align:center; color:var(--text-dim); padding:2rem 0; font-size:0.85rem;">Sin pedidos listos para servir</div>';
+    }
+
+    async function changeOrderStatus(orderId, nuevoEstado) {
+      const res = await fetch(`/api/admin/orders/${orderId}/status`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nuevoEstado })
+      });
+      if (res.ok) {
+        fetchOrders();
+      }
+    }
+
+    function initKdsSSE() {
+      const sse = new EventSource('/api/events');
+      sse.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === 'new_order') {
+            playAudioBeep();
+            showToast(`¡Nueva comanda recibida! #${data.order.numero_comanda}`, 'warning');
+            fetchOrders();
+          } else if (data.type === 'order_status') {
+            fetchOrders();
+          } else if (data.type === 'chat_message' && data.pedidoId === activeChatOrderId) {
+            appendKdsMsg(data.remitente, data.texto);
+          }
+        } catch (e) {}
+      };
+    }
+
+    function playAudioBeep() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.35);
+      } catch (e) {}
+    }
+
+    // Modal Stock
+    async function openStockModal() {
+      const res = await fetch('/api/admin/products');
+      if (res.ok) {
+        const prods = await res.json();
+        const container = document.getElementById('stock-products-list');
+        container.innerHTML = '';
+        prods.forEach(p => {
+          const row = document.createElement('div');
+          row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border-color);';
+          row.innerHTML = `
+            <div style="min-width:0; flex:1;">
+              <strong style="display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(p.nombre)}</strong>
+              <span style="font-size:0.8rem; color:var(--text-muted);">${p.precio.toFixed(2)} €</span>
+            </div>
+            <button onclick="toggleStock('${p.id}', ${!p.disponible})" class="btn btn-sm ${p.disponible ? 'btn-secondary' : 'btn-primary'}" style="${!p.disponible ? 'background:#ef4444; border-color:#ef4444;' : ''} flex-shrink:0;">
+              ${p.disponible ? 'Pausar (Agotado)' : 'Reactivar en Carta'}
+            </button>
+          `;
+          container.appendChild(row);
+        });
+        document.getElementById('stock-modal').classList.add('open');
+      }
+    }
+
+    function closeStockModal() {
+      document.getElementById('stock-modal').classList.remove('open');
+    }
+
+    async function toggleStock(prodId, disponible) {
+      await fetch(`/api/admin/products/${prodId}/stock`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ disponible })
+      });
+      openStockModal();
+      showToast('Disponibilidad de plato actualizada', 'success');
+    }
+
+    // Chat KDS
+    window.openKdsChat = async function(orderId, customerName, comandaNum) {
+      activeChatOrderId = orderId;
+      document.getElementById('kds-chat-title').textContent = `Chat con ${customerName}`;
+      document.getElementById('kds-chat-sub').textContent = `Comanda #${comandaNum}`;
+      document.getElementById('kds-chat-drawer').classList.add('open');
+      
+      const res = await fetch(`/api/orders/${orderId}/chat`);
+      if (res.ok) {
+        const messages = await res.json();
+        const container = document.getElementById('kds-chat-messages');
+        container.innerHTML = '';
+        messages.forEach(m => appendKdsMsg(m.remitente, m.texto));
+      }
+    };
+
+    window.closeKdsChat = function() {
+      document.getElementById('kds-chat-drawer').classList.remove('open');
+      activeChatOrderId = null;
+    };
+
+    async function sendKdsChatMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById('kds-chat-input');
+      const text = input.value.trim();
+      if (!text || !activeChatOrderId) return;
+
+      appendKdsMsg('restaurante', text);
+      input.value = '';
+
+      await fetch(`/api/orders/${activeChatOrderId}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ texto: text })
+      });
+    }
+
+    function appendKdsMsg(remitente, text) {
+      const container = document.getElementById('kds-chat-messages');
+      const bubble = document.createElement('div');
+      bubble.className = `chat-msg ${remitente === 'restaurante' ? 'restaurant' : 'customer'}`;
+      bubble.innerHTML = `${escapeHtml(text)} <span class="chat-time">Ahora</span>`;
+      container.appendChild(bubble);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.innerHTML = `<span>●</span><span>${escapeHtml(message)}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m]);
+    }
+  </script>
+</body>
+</html>

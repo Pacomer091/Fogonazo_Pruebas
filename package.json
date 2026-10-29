@@ -1,0 +1,16 @@
+{
+  "name": "fogonazo-os",
+  "version": "1.0.0",
+  "description": "Fogonazo OS - Sistema de pedidos online y comandas multi-inquilino",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --env-file=.env server.js",
+    "seed": "node db/seed.js",
+    "seed:reset": "node db/seed.js --reset"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.48.1",
+    "pg": "^8.13.1"
+  }
+}
