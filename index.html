@@ -3,398 +3,2104 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carta Digital & Pedidos | Gourmet Restobar</title>
+  <title>Fogonazo — Recupera tu negocio</title>
+  <link rel="icon" type="image/png" href="img/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/customer.css">
-  <link rel="stylesheet" href="css/restaurant.css">
   <style>
-    .svg-icon {
+    /* 1. TOP HEADER NAVIGATION (CLEAN UNBOXED LOGO, LINKS, CTA BUTTON) */
+    .landing-top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.85rem 1.5rem;
+      width: 100%;
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.03);
+    }
+
+    .top-bar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .brand-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      transition: var(--transition);
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    .brand-link:hover {
+      transform: translateY(-1px);
+    }
+
+    .brand-logo-img {
+      height: 42px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      mix-blend-mode: multiply;
+      filter: drop-shadow(0 2px 6px rgba(255, 85, 0, 0.25));
+    }
+
+    .brand-name-text {
+      color: var(--text-main);
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .landing-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 600;
+      padding: 6px 0;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .nav-link:hover {
+      color: var(--brand-orange);
+    }
+
+    .btn-header {
+      padding: 9px 18px !important;
+      font-size: 0.88rem !important;
+      font-weight: 700 !important;
+      border-radius: var(--radius-md) !important;
+      box-shadow: 0 4px 14px rgba(255, 85, 0, 0.22);
+    }
+
+    /* 2. HERO HEADER SECTION (2-COLUMN WITH PHONE MOCKUP & TRUST POINTS) */
+    .landing-hero {
+      padding: 3rem 1.5rem 2.5rem;
+      background: radial-gradient(circle at 50% 8%, rgba(255, 122, 0, 0.09) 0%, rgba(255, 247, 237, 0.5) 40%, #ffffff 80%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      grid-template-areas:
+        "text visual"
+        "actions visual"
+        "trust visual";
+      column-gap: 48px;
+      row-gap: 20px;
+      align-items: center;
+    }
+
+    .hero-text-block {
+      grid-area: text;
+      text-align: left;
+    }
+
+    .hero-h1 {
+      font-size: clamp(2.4rem, 4.8vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      word-spacing: 0.04em;
+      margin: 0 0 1.25rem 0;
+      color: var(--text-main);
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #ff4500 0%, #ff7a00 50%, #ffa100 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .hero-p {
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      color: var(--text-muted);
+      max-width: 540px;
+      line-height: 1.55;
+      margin: 0;
+      font-weight: 400;
+      text-wrap: balance;
+    }
+
+    .hero-actions {
+      grid-area: actions;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-actions .btn {
+      padding: 13px 26px;
+      font-size: 1.02rem;
+      font-weight: 800;
+      border-radius: var(--radius-md);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      vertical-align: middle;
+      gap: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    /* Button Hover Enhancements */
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 85, 0, 0.32);
+      filter: brightness(1.03);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+      background: #ffffff;
+      border-color: #cbd5e1;
+    }
+
+    /* Hero Trust Points Row (3 puntos de confianza con iconos Lucide) */
+    .hero-trust-row {
+      grid-area: trust;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(226, 232, 240, 0.85);
+      width: 100%;
+    }
+
+    .hero-trust-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .trust-icon {
+      color: var(--brand-orange);
       flex-shrink: 0;
     }
-    .svg-icon svg {
-      width: 1em;
-      height: 1em;
-      stroke: currentColor;
+
+    /* Hero Visual: Mockup de móvil con carta demo y tarjetas flotantes */
+    .hero-visual {
+      grid-area: visual;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .mockup-stage {
+      position: relative;
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 0;
+    }
+
+    .phone-frame {
+      width: 290px;
+      height: 535px;
+      background: #0f172a;
+      border-radius: 40px;
+      padding: 10px;
+      box-shadow: 0 24px 50px -12px rgba(15, 23, 42, 0.22),
+                  0 0 0 1px rgba(15, 23, 42, 0.08),
+                  0 0 35px rgba(255, 85, 0, 0.07);
+      position: relative;
+      user-select: none;
+      transition: transform 0.3s ease;
+    }
+
+    .phone-frame:hover {
+      transform: translateY(-3px);
+    }
+
+    .phone-dynamic-island {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 82px;
+      height: 20px;
+      background: #000000;
+      border-radius: 20px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 12px;
+    }
+
+    .phone-camera-lens {
+      width: 8px;
+      height: 8px;
+      background: #1e293b;
+      border-radius: 50%;
+      border: 1px solid #334155;
+      display: block;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      border-radius: 32px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .mockup-app-header {
+      background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%);
+      border-bottom: 1px solid #fed7aa;
+      padding: 28px 14px 10px;
+    }
+
+    .mockup-status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      padding: 0 4px;
+    }
+
+    .mockup-status-icons {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      color: var(--text-main);
+    }
+
+    .mockup-brand-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .mockup-title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .mockup-restaurant-name {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .mockup-demo-pill {
+      font-size: 0.54rem;
+      font-weight: 700;
+      color: #64748b;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 1px 5px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      line-height: 1.2;
+      display: inline-block;
+    }
+
+    .mockup-badges-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-top: 2px;
+    }
+
+    .mockup-tag-open {
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: #059669;
+      background: #ecfdf5;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    .mockup-tag-info {
+      font-size: 0.64rem;
+      color: var(--text-muted);
+    }
+
+    .mockup-rating-pill {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      background: #ffffff;
+      border: 1px solid #fed7aa;
+      padding: 2px 7px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .mockup-categories {
+      display: flex;
+      gap: 6px;
+      overflow-x: hidden;
+    }
+
+    .cat-pill {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: var(--text-muted);
+    }
+
+    .cat-pill.active {
+      background: var(--brand-orange);
+      color: #ffffff;
+    }
+
+    .mockup-dishes-list {
+      flex: 1;
+      overflow-y: hidden;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mockup-dish-item {
+      display: flex;
+      gap: 8px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 6px 8px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    }
+
+    .mockup-dish-img {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .mockup-dish-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .mockup-dish-title {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.25;
+    }
+
+    .mockup-dish-desc {
+      font-size: 0.62rem;
+      color: var(--text-dim);
+      line-height: 1.2;
+      margin: 2px 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .mockup-dish-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mockup-dish-price {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--brand-orange);
+    }
+
+    .mockup-add-btn {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      background: var(--brand-orange);
+      color: #ffffff;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .mockup-cart-bar {
+      margin: 8px 10px 12px;
+      background: #0f172a;
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.2);
+    }
+
+    .mockup-cart-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mockup-cart-qty {
+      font-size: 0.6rem;
+      color: #94a3b8;
+    }
+
+    .mockup-cart-total {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .mockup-cart-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--brand-orange);
+      color: #ffffff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 8px;
+    }
+
+    /* Floating Badges (1-2 tarjetas flotantes de nuevo pedido) */
+    .floating-badge {
+      position: absolute;
+      z-index: 30;
+      background: #ffffff;
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.12),
+                  0 4px 12px -2px rgba(15, 23, 42, 0.05);
+      backdrop-filter: blur(8px);
+      transition: transform 0.3s ease;
+    }
+
+    .badge-top-left {
+      top: 135px;
+      left: -58px;
+      animation: floatSlow 5s ease-in-out infinite;
+    }
+
+    .badge-bottom-right {
+      bottom: 85px;
+      right: -58px;
+      animation: floatSlowDelayed 5.5s ease-in-out infinite;
+    }
+
+    .badge-icon-wrap {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .badge-icon-wrap.icon-pulse {
+      background: #fff7ed;
+      color: var(--brand-orange);
+      border: 1px solid #fed7aa;
+    }
+
+    .badge-icon-wrap.icon-success {
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+    }
+
+    .badge-text-wrap {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .badge-title {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .badge-desc {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+      margin: 2px 0;
+    }
+
+    .badge-desc strong {
+      color: var(--text-main);
+    }
+
+    .badge-subnote {
+      font-size: 0.63rem;
+      color: var(--text-dim);
+      font-weight: 600;
+      margin: 1px 0 3px;
+      line-height: 1.2;
+    }
+
+    .badge-meta {
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+    }
+
+    .badge-meta.success {
+      color: #059669;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background: #10b981;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* Subtle Entry Animations (fade-up) & Floating */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes floatSlow {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    @keyframes floatSlowDelayed {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(8px);
+      }
+    }
+
+    .hero-text-block > * {
+      animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .hero-h1 { animation-delay: 0.05s; }
+    .hero-p { animation-delay: 0.12s; }
+    .hero-actions { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both; }
+    .hero-trust-row { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both; }
+    .hero-visual {
+      animation: fadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+    }
+
+    /* 3. CALCULATOR TEASER CARD SECTION (PORTADA) */
+    .calc-teaser-section {
+      padding: 3.5rem 1.5rem 4rem;
+      background: radial-gradient(circle at 50% 10%, rgba(255, 122, 0, 0.06) 0%, rgba(255, 247, 237, 0.4) 40%, #ffffff 80%);
+      scroll-margin-top: 80px;
+    }
+
+    .calc-teaser-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .calc-teaser-card {
+      background: #ffffff;
+      border: 1px solid #fed7aa;
+      border-radius: var(--radius-md);
+      padding: 2.75rem 3rem;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 2.5rem;
+      align-items: center;
+      box-shadow: 0 16px 40px -10px rgba(255, 85, 0, 0.1),
+                  0 4px 16px -2px rgba(15, 23, 42, 0.04);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .calc-teaser-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--brand-gradient);
+    }
+
+    .calc-teaser-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #ea580c;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.85rem;
+    }
+
+    .calc-teaser-title {
+      font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--text-main);
+      margin: 0 0 0.85rem 0;
+    }
+
+    .calc-teaser-sub {
+      font-size: clamp(1.02rem, 1.8vw, 1.2rem);
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0 0 1.75rem 0;
+      font-weight: 500;
+    }
+
+    .calc-teaser-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-calc-teaser {
+      padding: 13px 26px !important;
+      font-size: 1rem !important;
+      font-weight: 800 !important;
+      border-radius: var(--radius-md) !important;
+      box-shadow: 0 6px 20px rgba(255, 85, 0, 0.28);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn-calc-teaser:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(255, 85, 0, 0.38);
+      filter: brightness(1.04);
+    }
+
+    .calc-teaser-hint {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+
+    .calc-teaser-preview {
+      display: flex;
+      justify-content: center;
+    }
+
+    .calc-preview-box {
+      width: 100%;
+      background: linear-gradient(145deg, #fffaf5 0%, #ffffff 100%);
+      border: 1px solid #fed7aa;
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      box-shadow: 0 8px 24px -4px rgba(255, 85, 0, 0.08);
+      position: relative;
+    }
+
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 0.75rem;
+    }
+
+    .preview-label {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .preview-pill {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #ea580c;
+      background: #ffedd5;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+    }
+
+    .preview-amount-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 0.6rem;
+    }
+
+    .preview-val {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #047857;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .preview-period {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .preview-desc {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.45;
+      padding-bottom: 1rem;
+      border-bottom: 1px dashed #e2e8f0;
+      margin-bottom: 0.85rem;
+    }
+
+    .preview-footer {
+      display: flex;
+      align-items: center;
+    }
+
+    .preview-link {
+      color: var(--brand-orange);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: var(--transition);
+    }
+
+    .preview-link:hover {
+      color: #ea580c;
+      transform: translateX(2px);
+    }
+
+    /* 3.5. SECCIÓN LO QUE TENDRÁS CON FOGONAZO */
+    .what-you-get-section {
+      padding: 4.5rem 1.5rem 5rem;
+      background: #ffffff;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      scroll-margin-top: 80px;
+    }
+
+    .what-you-get-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-heading-center {
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto 3rem;
+    }
+
+    .section-tag-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #ea580c;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-main-title {
+      font-size: clamp(2rem, 3.5vw, 2.75rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--text-main);
+      margin: 0 0 0.85rem 0;
+    }
+
+    .section-main-sub {
+      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0 auto;
+      text-wrap: balance;
+    }
+
+    /* Grid de las 3 tarjetas */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+      align-items: stretch;
+      margin-bottom: 4rem;
+    }
+
+    .pillar-card {
+      background: #ffffff;
+      border-radius: var(--radius-md);
+      padding: 2rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+    }
+
+    .pillar-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+    }
+
+    .card-included {
+      border: 2px solid #a7f3d0;
+      background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 32%);
+    }
+
+    .card-optional {
+      border: 2px solid #fed7aa;
+      background: linear-gradient(180deg, #fff7ed 0%, #ffffff 32%);
+    }
+
+    .card-neutral {
+      border: 2px solid #e2e8f0;
+      background: linear-gradient(180deg, #f8fafc 0%, #ffffff 32%);
+    }
+
+    .pillar-card-header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .pillar-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 0.75rem;
+    }
+
+    .badge-green {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .badge-orange {
+      background: #fff7ed;
+      color: #c2410c;
+      border: 1px solid #fed7aa;
+    }
+
+    .badge-neutral {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+
+    .pillar-title {
+      font-size: 1.25rem;
+      font-weight: 850;
+      color: var(--text-main);
+      line-height: 1.25;
+      margin: 0 0 0.4rem 0;
+    }
+
+    .pillar-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    .pillar-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.05rem;
+      flex: 1;
+    }
+
+    .pillar-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: var(--text-main);
+      line-height: 1.45;
+    }
+
+    .pillar-list li strong {
+      font-weight: 750;
+    }
+
+    .pillar-list li code {
+      background: #f1f5f9;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      color: #ea580c;
+      border: 1px solid #e2e8f0;
+    }
+
+    .icon-bullet {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .bullet-green {
+      background: #d1fae5;
+      color: #059669;
+    }
+
+    .bullet-orange {
+      background: #ffedd5;
+      color: #ea580c;
+    }
+
+    .bullet-neutral {
+      background: #e2e8f0;
+      color: #64748b;
+    }
+
+    /* 3 Pasos numerados */
+    .onboarding-steps-container {
+      background: linear-gradient(145deg, #fffaf5 0%, #ffffff 100%);
+      border: 1px solid #fed7aa;
+      border-radius: var(--radius-md);
+      padding: 2.75rem 2.5rem;
+      box-shadow: 0 10px 30px -4px rgba(255, 85, 0, 0.08);
+      position: relative;
+    }
+
+    .steps-heading {
+      text-align: center;
+      margin-bottom: 2.25rem;
+    }
+
+    .steps-badge {
+      display: inline-block;
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #ea580c;
+      background: #ffedd5;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      margin-bottom: 0.5rem;
+    }
+
+    .steps-title {
+      font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+      font-weight: 900;
+      color: var(--text-main);
+      margin: 0;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+      position: relative;
+      margin-bottom: 2.25rem;
+    }
+
+    .step-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .step-card:hover {
+      transform: translateY(-2px);
+      border-color: #fed7aa;
+    }
+
+    .step-number-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ff5500 0%, #ea580c 100%);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 900;
+      box-shadow: 0 4px 12px rgba(255, 85, 0, 0.25);
+    }
+
+    .step-info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .step-name {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    .step-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    /* Cierre CTA */
+    .steps-closing-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding: 1.5rem 2rem;
+      background: #ffffff;
+      border: 1px solid #fed7aa;
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 16px rgba(255, 85, 0, 0.06);
+      flex-wrap: wrap;
+    }
+
+    .closing-text-wrap {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .closing-quote {
+      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    .btn-closing-cita {
+      padding: 12px 24px !important;
+      font-size: 0.96rem !important;
+      font-weight: 800 !important;
+      border-radius: var(--radius-md) !important;
+      box-shadow: 0 4px 16px rgba(255, 85, 0, 0.28);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .btn-closing-cita:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 85, 0, 0.38);
+    }
+
+    /* 4. PRICING SECTION (CUOTAS MENSUALES) */
+    .pricing-section {
+      max-width: 1000px;
+      margin: 4.5rem auto 5rem;
+      padding: 0 1.5rem;
+      text-align: center;
+      scroll-margin-top: 80px;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 2.5rem;
+    }
+
+    .price-card {
+      padding: 2.5rem 2rem;
+      border-radius: var(--radius-lg);
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      text-align: left;
+      position: relative;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+    }
+
+    .price-card.featured {
+      border: 2px solid var(--brand-orange);
+      box-shadow: 0 10px 35px rgba(255, 85, 0, 0.16);
+      background: #ffffff;
+    }
+
+    .price-val {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin: 1rem 0;
+      color: var(--text-main);
+    }
+
+    /* ====================================================================
+       MOBILE-FIRST RESPONSIVE OPTIMIZATIONS (< 768px)
+       ==================================================================== */
+    @media (max-width: 768px) {
+      .landing-top-bar {
+        padding: 0.75rem 1rem;
+      }
+      .top-bar-inner {
+        gap: 0.75rem;
+      }
+      .brand-link {
+        gap: 0.5rem;
+      }
+      .brand-logo-img {
+        height: 36px;
+      }
+      .brand-name-text {
+        font-size: 1.3rem;
+      }
+      .landing-nav-links {
+        display: none; /* Mantener la cabecera limpia y enfocada en móvil */
+      }
+      .btn-header {
+        padding: 8px 14px !important;
+        font-size: 0.82rem !important;
+      }
+
+      .landing-hero {
+        padding: 2.25rem 1rem 2rem;
+      }
+
+      .hero-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+      }
+
+      .hero-text-block {
+        order: 1;
+        text-align: center;
+        width: 100%;
+      }
+
+      .hero-h1 {
+        letter-spacing: -0.02em;
+        word-spacing: 0.02em;
+        margin-bottom: 0.75rem;
+      }
+
+      .hero-p {
+        margin: 0 auto 0.75rem;
+        line-height: 1.5;
+        max-width: 100%;
+      }
+
+      .hero-visual {
+        order: 2; /* Móvil con las notificaciones debajo del texto */
+        width: 100%;
+        margin: 0.75rem 0 1.5rem;
+        display: flex;
+        justify-content: center;
+        overflow: visible;
+      }
+
+      .hero-actions {
+        order: 3; /* Botones de acción debajo del móvil */
+        flex-direction: column;
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto 1.25rem;
+        gap: 12px;
+        justify-content: center;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+        min-height: 48px;
+        font-size: 0.98rem;
+      }
+
+      .hero-trust-row {
+        order: 4; /* Puntos de confianza debajo de los botones */
+        justify-content: center;
+        gap: 14px;
+        padding-top: 0.85rem;
+        margin-top: 0.25rem;
+      }
+
+      .mockup-stage {
+        max-width: 320px;
+        padding: 12px 0;
+      }
+
+      .phone-frame {
+        width: 270px;
+        height: 485px;
+        border-radius: 36px;
+        padding: 8px;
+      }
+
+      .phone-screen {
+        border-radius: 28px;
+      }
+
+      .floating-badge {
+        padding: 8px 10px;
+        gap: 8px;
+      }
+
+      .badge-top-left {
+        left: -14px;
+        top: 115px;
+      }
+
+      .badge-bottom-right {
+        right: -14px;
+        bottom: 70px;
+      }
+
+      .badge-icon-wrap {
+        width: 32px;
+        height: 32px;
+      }
+
+      .badge-title {
+        font-size: 0.74rem;
+      }
+
+      .badge-desc {
+        font-size: 0.65rem;
+      }
+
+      .badge-meta {
+        font-size: 0.58rem;
+      }
+
+      /* Teaser en modo móvil */
+      .calc-teaser-section {
+        padding: 2rem 1rem 2.5rem;
+      }
+
+      .calc-teaser-card {
+        grid-template-columns: 1fr;
+        padding: 1.75rem 1.25rem;
+        gap: 1.5rem;
+      }
+
+      .calc-teaser-title {
+        font-size: 1.5rem;
+      }
+
+      .calc-teaser-sub {
+        font-size: 0.95rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .btn-calc-teaser {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .calc-teaser-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+      }
+
+      .calc-teaser-hint {
+        text-align: center;
+      }
+
+      .what-you-get-section {
+        padding: 2.75rem 1rem 3.25rem;
+      }
+      .section-main-title {
+        font-size: 1.65rem;
+      }
+      .section-main-sub {
+        font-size: 0.95rem;
+      }
+      .pillars-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+        margin-bottom: 2.5rem;
+      }
+      .pillar-card {
+        padding: 1.5rem 1.25rem;
+      }
+      .onboarding-steps-container {
+        padding: 1.5rem 1.2rem;
+      }
+      .steps-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1.75rem;
+      }
+      .steps-closing-banner {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.25rem 1rem;
+        gap: 1rem;
+      }
+      .btn-closing-cita {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .pricing-section {
+        padding: 0 1rem 3rem;
+      }
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .price-card {
+        padding: 1.8rem 1.25rem;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Global Nav (Customer Facing Only) -->
-  <header class="global-nav">
-    <a href="index.html" class="brand-badge">
-      <div class="logo-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
-          <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
-          <line x1="6" y1="1" x2="6" y2="4"></line>
-          <line x1="10" y1="1" x2="10" y2="4"></line>
-          <line x1="14" y1="1" x2="14" y2="4"></line>
-        </svg>
+  <!-- 1. TOP HEADER NAVIGATION: UNBOXED LOGO, NAV LINKS, CTA BUTTON -->
+  <header class="landing-top-bar">
+    <div class="top-bar-inner">
+      <a href="index.html" class="brand-link">
+        <img src="img/logo.png" alt="Fogonazo" class="brand-logo-img">
+        <span class="brand-name-text">Fogonazo</span>
+      </a>
+
+      <nav class="landing-nav-links">
+        <a href="calculadora.html" class="nav-link">Calculadora</a>
+        <a href="#que-incluye" class="nav-link">Qué incluye</a>
+        <a href="#planes" class="nav-link">Precios</a>
+        <a href="demo.html" target="_blank" class="nav-link">Demo</a>
+      </nav>
+
+      <div class="top-bar-actions">
+        <button onclick="openCitaModal()" class="btn btn-primary btn-header" id="btn-header-cita">
+          <span>Pide una cita</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
       </div>
-      <span>Gourmet<span class="accent">Flow</span></span>
-    </a>
-
-    <div style="display: flex; align-items: center; gap: 12px;">
-      <!-- Call Waiter / Chat Button -->
-      <button id="btn-customer-chat" class="btn btn-secondary btn-sm" onclick="openCustomerChat()" style="display: none;">
-        <span class="svg-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
-        </span>
-        <span>Contactar Restaurante</span>
-      </button>
-
-      <!-- Cart shortcut in top bar if items exist -->
-      <button onclick="openCartModal()" class="btn btn-primary btn-sm" id="top-cart-btn" style="display: none;">
-        <span class="svg-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <path d="M16 10a4 4 0 0 1-8 0"></path>
-          </svg>
-        </span>
-        <span>Carrito</span>
-      </button>
     </div>
   </header>
 
-  <!-- Main Customer Experience -->
-  <main class="customer-wrapper">
-    
-    <!-- Restaurant Banner -->
-    <section class="restaurant-banner">
-      <div class="banner-info">
-        <h1 id="banner-rest-name">Gourmet Restobar</h1>
-        <p>Cocina mediterránea de autor • Productos frescos de proximidad y horno de leña</p>
-      </div>
+  <!-- 2. HERO HEADER SECTION -->
+  <main>
+    <section class="landing-hero">
+      <div class="hero-container">
+        <!-- 1. Hero Text Block: Titular & Subtítulo -->
+        <div class="hero-text-block">
+          <h1 class="hero-h1">Recupera tu <span class="gradient-text">negocio</span></h1>
+          <p class="hero-p">Tu propia web de pedidos, sin comisiones. Una cuota fija al mes.</p>
+        </div>
 
-      <div class="table-picker-box">
-        <span class="svg-icon" style="color: var(--brand-orange-light);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-            <circle cx="12" cy="10" r="3"></circle>
-          </svg>
-        </span>
-        <div>
-          <label style="font-size: 0.72rem; color: var(--text-muted); display: block; text-transform: uppercase;">Ubicación del pedido</label>
-          <select id="select-order-type" onchange="handleOrderTypeChange()">
-            <option value="mesa_1">Mesa 1 (Salón Principal)</option>
-            <option value="mesa_4" selected>Mesa 4 (Terraza)</option>
-            <option value="mesa_8">Mesa 8 (Ventanal)</option>
-            <option value="barra">Servicio en Barra</option>
-            <option value="delivery">Reparto a Domicilio</option>
-          </select>
+        <!-- 2. Hero Visual: Mockup de móvil con carta demo y tarjetas flotantes de nuevo pedido (debajo del texto en móvil) -->
+        <div class="hero-visual">
+          <div class="mockup-stage">
+            <!-- Tarjeta flotante 1: Nuevo pedido (arriba izquierda) -->
+            <div class="floating-badge badge-top-left">
+              <div class="badge-icon-wrap icon-pulse">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+              </div>
+              <div class="badge-text-wrap">
+                <div class="badge-title">Nuevo pedido #108</div>
+                <div class="badge-desc">Chuletón + Croquetas · <strong>60,50 €</strong></div>
+                <div class="badge-meta">
+                  <span class="badge-dot"></span>
+                  <span>Hace 1 min · Pagado Bizum</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dispositivo Smartphone Mockup -->
+            <div class="phone-frame">
+              <!-- Dynamic Island / Speaker notch -->
+              <div class="phone-dynamic-island">
+                <span class="phone-camera-lens"></span>
+              </div>
+
+              <!-- Pantalla del móvil -->
+              <div class="phone-screen">
+                <!-- Cabecera de la app del restaurante -->
+                <div class="mockup-app-header">
+                  <div class="mockup-status-bar">
+                    <span>13:45</span>
+                    <div class="mockup-status-icons">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="16" height="10" rx="2" ry="2"></rect><line x1="22" y1="11" x2="22" y2="13"></line></svg>
+                    </div>
+                  </div>
+
+                  <div class="mockup-brand-row">
+                    <div class="mockup-brand-info">
+                      <div class="mockup-title-row">
+                        <h4 class="mockup-restaurant-name">Asador San Mamés</h4>
+                        <span class="mockup-demo-pill">Restaurante de ejemplo</span>
+                      </div>
+                      <div class="mockup-badges-row">
+                        <span class="mockup-tag-open">Abierto</span>
+                        <span class="mockup-tag-info">20-30 min · 3,50 € envío</span>
+                      </div>
+                    </div>
+                    <div class="mockup-rating-pill">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="#ff7a00" stroke="#ff7a00"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                      <span>4.9</span>
+                    </div>
+                  </div>
+
+                  <!-- Categorías de la carta -->
+                  <div class="mockup-categories">
+                    <span class="cat-pill active">Brasas</span>
+                    <span class="cat-pill">Entrantes</span>
+                    <span class="cat-pill">Bebidas</span>
+                  </div>
+                </div>
+
+                <!-- Lista de platos de la carta demo -->
+                <div class="mockup-dishes-list">
+                  <!-- Plato 1: Chuletón madurado -->
+                  <div class="mockup-dish-item">
+                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=200&auto=format&fit=crop&q=80" alt="Chuletón Madurado" class="mockup-dish-img" loading="lazy">
+                    <div class="mockup-dish-details">
+                      <div class="mockup-dish-title">Chuletón Madurado 1kg</div>
+                      <div class="mockup-dish-desc">Vaca rubia gallega 45 días a la brasa de encina</div>
+                      <div class="mockup-dish-bottom">
+                        <span class="mockup-dish-price">48,00 €</span>
+                        <button class="mockup-add-btn" aria-label="Añadir plato">
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Plato 2: Croquetas de txuleta -->
+                  <div class="mockup-dish-item">
+                    <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=200&auto=format&fit=crop&q=80" alt="Croquetas de Txuleta" class="mockup-dish-img" loading="lazy">
+                    <div class="mockup-dish-details">
+                      <div class="mockup-dish-title">Croquetas de Txuleta (6u)</div>
+                      <div class="mockup-dish-desc">Cremosas y crujientes con jugo de carne madurada</div>
+                      <div class="mockup-dish-bottom">
+                        <span class="mockup-dish-price">12,50 €</span>
+                        <button class="mockup-add-btn" aria-label="Añadir plato">
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Plato 3: Pimientos del Padrón a la brasa -->
+                  <div class="mockup-dish-item">
+                    <img src="https://images.unsplash.com/photo-1592417817098-8f3d6910985b?w=200&auto=format&fit=crop&q=80" alt="Pimientos a la Brasa" class="mockup-dish-img" loading="lazy">
+                    <div class="mockup-dish-details">
+                      <div class="mockup-dish-title">Pimientos del Padrón (Brasa)</div>
+                      <div class="mockup-dish-desc">Asados al fuego vivo con sal en escamas</div>
+                      <div class="mockup-dish-bottom">
+                        <span class="mockup-dish-price">8,50 €</span>
+                        <button class="mockup-add-btn" aria-label="Añadir plato">
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Barra de pedido en curso dentro del móvil -->
+                <div class="mockup-cart-bar">
+                  <div class="mockup-cart-info">
+                    <span class="mockup-cart-qty">2 platos seleccionados</span>
+                    <span class="mockup-cart-total">60,50 €</span>
+                  </div>
+                  <div class="mockup-cart-btn">
+                    <span>Pedir</span>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tarjeta flotante 2: 0% Comisiones (abajo derecha) -->
+            <div class="floating-badge badge-bottom-right">
+              <div class="badge-icon-wrap icon-success">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div class="badge-text-wrap">
+                <div class="badge-title">0% Comisiones</div>
+                <div class="badge-desc">Margen 100% tuyo: <strong>+18,15 €</strong> ahorrados</div>
+                <div class="badge-subnote">Ejemplo con 30% de comisión</div>
+                <div class="badge-meta success">
+                  <span>Sin comisiones por pedido</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Hero Actions: Botones Pide una cita y Ver demo -->
+        <div class="hero-actions">
+          <!-- Botón 1: Pide una cita -->
+          <button onclick="openCitaModal()" class="btn btn-primary" id="btn-hero-cita">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Pide una cita</span>
+          </button>
+
+          <!-- Botón 2: Ver demo -->
+          <a href="demo.html" target="_blank" class="btn btn-secondary" id="btn-hero-restaurantes">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+              <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+              <line x1="6" y1="1" x2="6" y2="4"></line>
+              <line x1="10" y1="1" x2="10" y2="4"></line>
+              <line x1="14" y1="1" x2="14" y2="4"></line>
+            </svg>
+            <span>Ver demo</span>
+          </a>
+        </div>
+
+        <!-- 4. Bajo los botones: línea de 3 puntos de confianza con iconos Lucide -->
+        <div class="hero-trust-row">
+          <div class="hero-trust-item">
+            <svg class="trust-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <polyline points="9 12 11 14 15 10"></polyline>
+            </svg>
+            <span>Sin permanencia</span>
+          </div>
+          <div class="hero-trust-item">
+            <svg class="trust-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+              <line x1="2" y1="10" x2="22" y2="10"></line>
+            </svg>
+            <span>Cobro directo Bizum y tarjeta</span>
+          </div>
+          <div class="hero-trust-item">
+            <svg class="trust-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            <span>Instalación en menos de 24h</span>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Active Order Live Tracker Banner -->
-    <div id="live-order-tracker" class="tracking-banner" style="display: none;">
-      <div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="live-indicator"><span class="pulse-dot"></span> ESTADO DEL PEDIDO</span>
-          <strong id="tracker-order-id" style="font-size: 1.1rem; color: var(--brand-orange-light);">#ORD-000</strong>
-        </div>
-        <p id="tracker-status-desc" style="font-size: 0.88rem; color: var(--text-muted); margin-top: 4px;">
-          Tu comanda ha entrado en cocina.
-        </p>
-        
-        <div class="status-timeline">
-          <div class="timeline-step" id="step-pending">
-            <span class="svg-icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+    <!-- 2.5. TEASER CALCULADORA DE COMISIONES & AHORRO REAL -->
+    <section class="calc-teaser-section" id="calculadora">
+      <div class="calc-teaser-container">
+        <div class="calc-teaser-card">
+          <!-- Columna izquierda: Titular, línea de apoyo y botón -->
+          <div class="calc-teaser-content">
+            <span class="calc-teaser-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><line x1="8" y1="10" x2="8.01" y2="10"></line><line x1="12" y1="10" x2="12.01" y2="10"></line><line x1="16" y1="10" x2="16.01" y2="10"></line><line x1="8" y1="14" x2="8.01" y2="14"></line><line x1="12" y1="14" x2="12.01" y2="14"></line><line x1="8" y1="18" x2="8.01" y2="18"></line><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+              Calculadora de Margen
             </span>
-            Recibido
+            <h2 class="calc-teaser-title">Descubre cuánto puedes recuperar cada mes</h2>
+            <p class="calc-teaser-sub">Calcula en 30 segundos lo que pagas en comisiones</p>
+            <div class="calc-teaser-actions">
+              <a href="calculadora.html" class="btn btn-primary btn-calc-teaser" id="btn-calcular-ahorro">
+                <span>Calcular mi ahorro</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </a>
+              <span class="calc-teaser-hint">Sin registro previo · 100% transparente</span>
+            </div>
           </div>
-          <span class="svg-icon" style="opacity: 0.4;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </span>
-          <div class="timeline-step" id="step-cooking">
-            <span class="svg-icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3.5z"></path></svg>
-            </span>
-            En Cocina
-          </div>
-          <span class="svg-icon" style="opacity: 0.4;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </span>
-          <div class="timeline-step" id="step-ready">
-            <span class="svg-icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            </span>
-            Listo / Servido
+
+          <!-- Columna derecha: Tarjeta de previsualización de ahorro -->
+          <div class="calc-teaser-preview">
+            <div class="calc-preview-box">
+              <div class="preview-header">
+                <span class="preview-label">Ejemplo para 300 pedidos/mes</span>
+                <span class="preview-pill">30% Comisión vs Fogonazo</span>
+              </div>
+              <div class="preview-amount-row">
+                <div class="preview-val">+630,36 €</div>
+                <div class="preview-period">/ mes recuperados</div>
+              </div>
+              <div class="preview-desc">
+                Descontando cuota fija (69 €), pasarela de pago bancaria y logística de reparto.
+              </div>
+              <div class="preview-footer">
+                <a href="calculadora.html" class="preview-link">
+                  <span>Ajustar a los números de mi restaurante</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14"></path><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+    </section>
 
-      <button onclick="openCustomerChat()" class="btn btn-secondary btn-sm" style="border-color: var(--brand-orange);">
-        <span class="svg-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
-        </span>
-        <span>Hablar con el Personal</span>
-      </button>
-    </div>
+    <!-- 2.7. SECCIÓN LO QUE TENDRÁS CON FOGONAZO -->
+    <section class="what-you-get-section" id="que-incluye">
+      <div class="what-you-get-container">
+        <!-- Cabecera de la sección -->
+        <div class="section-heading-center">
+          <span class="section-tag-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            Transparencia y claridad
+          </span>
+          <h2 class="section-main-title">Lo que tendrás con Fogonazo</h2>
+          <p class="section-main-sub">Una web de pedidos propia, lista para usar y configurada por nosotros.</p>
+        </div>
 
-    <!-- Category Filters -->
-    <div class="category-scroller" id="category-scroller">
-      <button class="category-pill active" onclick="filterCategory('all')">Toda la Carta</button>
-      <button class="category-pill" onclick="filterCategory('Pizzas Artesanas')">Pizzas Artesanas</button>
-      <button class="category-pill" onclick="filterCategory('Pastas Frescas')">Pastas Frescas</button>
-      <button class="category-pill" onclick="filterCategory('Entrantes')">Entrantes</button>
-      <button class="category-pill" onclick="filterCategory('Postres')">Postres</button>
-      <button class="category-pill" onclick="filterCategory('Bebidas & Vinos')">Bebidas y Vinos</button>
-    </div>
+        <!-- Rejilla de 3 tarjetas -->
+        <div class="pillars-grid">
+          
+          <!-- Tarjeta 1: Incluido -->
+          <div class="pillar-card card-included">
+            <div class="pillar-card-header">
+              <div class="pillar-badge badge-green">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Incluido</span>
+              </div>
+              <h3 class="pillar-title">Todo lo esencial para vender directo</h3>
+              <p class="pillar-desc">Tu operativa completa llave en mano desde el primer día.</p>
+            </div>
+            
+            <ul class="pillar-list">
+              <li>
+                <div class="icon-bullet bullet-green">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <span><strong>Web de pedidos</strong> en <code>tu-restaurante.fogonazo.es</code> con tu logo y colores.</span>
+              </li>
+              <li>
+                <div class="icon-bullet bullet-green">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <span><strong>Carta cargada por nosotros:</strong> platos, descripciones, fotos, opciones y alérgenos.</span>
+              </li>
+              <li>
+                <div class="icon-bullet bullet-green">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <span><strong>Pedidos para recoger o a domicilio:</strong> con zonas de reparto delimitadas y pedido mínimo.</span>
+              </li>
+              <li>
+                <div class="icon-bullet bullet-green">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <span><strong>Aviso en tiempo real</strong> para cocina con sonido y monitor de pedidos.</span>
+              </li>
+              <li>
+                <div class="icon-bullet bullet-green">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <span><strong>Panel de control:</strong> para pausar platos agotados al instante y gestionar comandas.</span>
+              </li>
+              <li>
+                <div class="icon-bullet bullet-green">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <span><strong>Cobro directo en tu cuenta:</strong> mediante tarjeta bancaria y Bizum sin intermediarios.</span>
+              </li>
+              <li>
+                <div class="icon-bullet bullet-green">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <span><strong>Códigos QR personalizados:</strong> para mesas de tu local, flyers y bolsas de comida.</span>
+              </li>
+              <li>
+                <div class="icon-bullet bullet-green">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <span><strong>Soporte continuo y directo:</strong> atención personalizada por WhatsApp o correo electrónico.</span>
+              </li>
+            </ul>
+          </div>
 
-    <!-- Dishes Grid -->
-    <div class="dishes-grid" id="dishes-container"></div>
+          <!-- Tarjeta 2: Opcional -->
+          <div class="pillar-card card-optional">
+            <div class="pillar-card-header">
+              <div class="pillar-badge badge-orange">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                <span>Opcional</span>
+              </div>
+              <h3 class="pillar-title">Ampliaciones a tu medida</h3>
+              <p class="pillar-desc">Módulos avanzados que puedes activar si tu negocio lo necesita.</p>
+            </div>
+            
+            <ul class="pillar-list">
+              <li>
+                <div class="icon-bullet bullet-orange">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a8 8 0 0 0-8 8c0 3.3 2 6.2 5 7.4V20a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-2.6c3-1.2 5-4.1 5-7.4a8 8 0 0 0-8-8z"></path></svg>
+                </div>
+                <span><strong>Asistente con IA que propone menús:</strong> sugerencias automáticas de platos y promociones para aumentar el ticket medio.</span>
+              </li>
+              <li>
+                <div class="icon-bullet bullet-orange">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                </div>
+                <span><strong>Conexión con repartidores bajo demanda:</strong> integra flotas externas de mensajería (el reparto lo pagas directamente al proveedor).</span>
+              </li>
+              <li>
+                <div class="icon-bullet bullet-orange">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                </div>
+                <span><strong>Dominio propio:</strong> conecta tu propia dirección web personalizada (ej. <code>pedidos.turestaurante.com</code>).</span>
+              </li>
+              <li>
+                <div class="icon-bullet bullet-orange">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                </div>
+                <span><strong>App propia:</strong> web instalable para clientes habituales, y en Google Play como servicio aparte.</span>
+              </li>
+            </ul>
+          </div>
 
+          <!-- Tarjeta 3: Lo que Fogonazo no hace -->
+          <div class="pillar-card card-neutral">
+            <div class="pillar-card-header">
+              <div class="pillar-badge badge-neutral">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+                <span>Lo que Fogonazo no hace</span>
+              </div>
+              <h3 class="pillar-title">Claridad y transparencia</h3>
+              <p class="pillar-desc">Límites definidos para que nunca tengas dudas ni sorpresas.</p>
+            </div>
+            
+            <ul class="pillar-list">
+              <li>
+                <div class="icon-bullet bullet-neutral">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </div>
+                <span><strong>No trae clientes nuevos:</strong> funciona para tus clientes habituales y para los canales directos que tú promocionas.</span>
+              </li>
+              <li>
+                <div class="icon-bullet bullet-neutral">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </div>
+                <span><strong>No tiene repartidores propios:</strong> utilizas tu propio personal de reparto o contratas mensajería bajo demanda según tu volumen.</span>
+              </li>
+              <li>
+                <div class="icon-bullet bullet-neutral">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </div>
+                <span><strong>Sin comisión nuestra por comanda:</strong> aunque la pasarela bancaria cobra su tasa normal por procesar cobros con tarjeta.</span>
+              </li>
+              <li>
+                <div class="icon-bullet bullet-neutral">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </div>
+                <span><strong>No es un TPV ni facturación:</strong> es un sistema especializado en pedidos online directos y pantalla KDS para cocina.</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- 3 Pasos numerados -->
+        <div class="onboarding-steps-container">
+          <div class="steps-heading">
+            <span class="steps-badge">Puesta en marcha en menos de 24h</span>
+            <h3 class="steps-title">3 sencillos pasos para tener tu web lista</h3>
+          </div>
+
+          <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-number-wrap">
+                <span class="step-number">1</span>
+              </div>
+              <div class="step-info">
+                <h4 class="step-name">1) Nos cuentas cómo trabajas</h4>
+                <p class="step-desc">Una llamada de 15 min donde revisamos tu operativa, zonas de reparto, horarios y precios.</p>
+              </div>
+            </div>
+
+            <div class="step-card">
+              <div class="step-number-wrap">
+                <span class="step-number">2</span>
+              </div>
+              <div class="step-info">
+                <h4 class="step-name">2) Montamos tu web y cargamos tu carta</h4>
+                <p class="step-desc">Configuramos el diseño con tu logotipo, colores, categorías de comida, suplementos y alérgenos.</p>
+              </div>
+            </div>
+
+            <div class="step-card">
+              <div class="step-number-wrap">
+                <span class="step-number">3</span>
+              </div>
+              <div class="step-info">
+                <h4 class="step-name">3) Pedido de prueba y publicación</h4>
+                <p class="step-desc">Hacemos una comanda de test juntos para verificar que todo entra perfecto antes de abrir a tus clientes.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cierre con texto y botón -->
+          <div class="steps-closing-banner">
+            <div class="closing-text-wrap">
+              <p class="closing-quote">¿Te encaja? Pide una cita y vemos tu caso sin compromiso.</p>
+            </div>
+            <button onclick="openCitaModal('Lo que tendrás')" class="btn btn-primary btn-closing-cita" id="btn-que-incluye-cita">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              <span>Pide una cita</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 5. PRICING SECTION -->
+    <section class="pricing-section" id="planes">
+      <h2 style="font-size: clamp(1.8rem, 4vw, 2.3rem); font-weight: 900; margin-bottom: 0.5rem;">Suscripción fija sin sorpresas</h2>
+      <p style="color: var(--text-muted);">Sin costes ocultos ni permanencia. Elige el plan que mejor se ajuste a tu local.</p>
+
+      <div class="pricing-grid">
+        <div class="price-card">
+          <h4 style="font-size: 1.2rem; font-weight: 700;">Plan Pro</h4>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">Ideal para bares y locales individuales</p>
+          <div class="price-val">69 €<span style="font-size: 1rem; color: var(--text-dim); font-weight: normal;"> / mes</span></div>
+          <ul style="color: var(--text-muted); font-size: 0.9rem; line-height: 2.1; list-style: none; padding: 0;">
+            <li><span style="color: var(--status-ready); margin-right: 8px; font-weight: 800;">+</span>Carta digital interactiva QR</li>
+            <li><span style="color: var(--status-ready); margin-right: 8px; font-weight: 800;">+</span>Monitor de cocina KDS en vivo</li>
+            <li><span style="color: var(--status-ready); margin-right: 8px; font-weight: 800;">+</span>Pagos con Bizum, Tarjeta y PayPal</li>
+            <li><span style="color: var(--status-ready); margin-right: 8px; font-weight: 800;">+</span>Chat en vivo con clientes</li>
+            <li><span style="color: var(--status-ready); margin-right: 8px; font-weight: 800;">+</span>Soporte prioritario</li>
+          </ul>
+          <button onclick="openCitaModal('Plan Pro')" class="btn btn-secondary" style="width: 100%; margin-top: 1.5rem;">
+            Pide una cita
+          </button>
+        </div>
+
+        <div class="price-card featured">
+          <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 800; color: var(--brand-orange-light); margin-bottom: 4px;">Más Recomendado</div>
+          <h4 style="font-size: 1.2rem; font-weight: 700;">Plan Enterprise</h4>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">Para asadores, grupos y alta demanda</p>
+          <div class="price-val">149 €<span style="font-size: 1rem; color: var(--text-dim); font-weight: normal;"> / mes</span></div>
+          <ul style="color: var(--text-muted); font-size: 0.9rem; line-height: 2.1; list-style: none; padding: 0;">
+            <li><span style="color: var(--status-ready); margin-right: 8px; font-weight: 800;">+</span>Todo lo del plan Pro</li>
+            <li><span style="color: var(--status-ready); margin-right: 8px; font-weight: 800;">+</span>Subdominio personalizado</li>
+            <li><span style="color: var(--status-ready); margin-right: 8px; font-weight: 800;">+</span>Zonas de entrega avanzadas</li>
+            <li><span style="color: var(--status-ready); margin-right: 8px; font-weight: 800;">+</span>Asistente inteligente de menús</li>
+            <li><span style="color: var(--status-ready); margin-right: 8px; font-weight: 800;">+</span>Gestor de cuenta exclusivo</li>
+          </ul>
+          <button onclick="openCitaModal('Plan Enterprise')" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">
+            Pide una cita
+          </button>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- Sticky Bottom Cart Bar -->
-  <div class="cart-floating-bar" id="floating-cart" onclick="openCartModal()" style="display: none;">
-    <div class="cart-summary-text">
-      <div class="cart-badge-count" id="cart-total-qty">0</div>
-      <div>
-        <span style="font-size: 0.85rem; color: var(--text-muted); display: block;">Mi Comanda</span>
-        <strong id="cart-total-price" style="font-size: 1.05rem;">0.00 €</strong>
-      </div>
-    </div>
-    <div class="btn btn-primary btn-sm">
-      <span>Revisar y Pagar</span>
-      <span class="svg-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="12 5 19 12 12 19"></polyline>
-        </svg>
-      </span>
-    </div>
-  </div>
-
-  <!-- Cart & Checkout Modal -->
-  <div class="modal-overlay" id="cart-modal">
-    <div class="cart-modal-content">
+  <!-- MODAL: PIDE UNA CITA CON FOGONAZO -->
+  <div class="modal-overlay" id="cita-modal">
+    <div class="cart-modal-content" style="max-width: 500px;">
       <div class="modal-header">
-        <h3 style="font-size: 1.2rem; font-weight: 800;">Tu Pedido</h3>
-        <button onclick="closeCartModal()" style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;">&times;</button>
+        <div>
+          <h3 style="font-size: 1.25rem; font-weight: 800;">Pide una cita con Fogonazo</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">Te mostramos en 10 minutos cómo recuperar tus márgenes</p>
+        </div>
+        <button onclick="closeCitaModal()" style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;">&times;</button>
       </div>
 
       <div class="modal-body">
-        <!-- List of items -->
-        <div id="cart-items-container"></div>
-
-        <!-- Customer & Delivery Form -->
-        <div style="margin-top: 1.5rem;">
-          <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Tu Nombre / Alias</label>
-          <input type="text" id="checkout-customer-name" class="form-input" placeholder="Ej. Carlos Mendoza" value="Carlos Mendoza">
-
-          <div id="delivery-address-group" style="display: none; margin-top: 12px;">
-            <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Dirección de Entrega</label>
-            <input type="text" id="checkout-address" class="form-input" placeholder="Calle, número, piso y puerta">
+        <form onsubmit="handleCitaSubmit(event)" id="cita-form">
+          <div style="margin-bottom: 14px;">
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Tu Nombre y Apellidos</label>
+            <input type="text" id="cita-nombre" class="form-input" required placeholder="Ej. Javier Gómez">
           </div>
 
-          <div style="margin-top: 12px;">
-            <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Notas de cocina (opcional)</label>
-            <input type="text" id="checkout-note" class="form-input" placeholder="Sin cebolla, bien tostado, alérgenos...">
-          </div>
-        </div>
-
-        <!-- Payment Method Tabs with Official Logos -->
-        <div style="margin-top: 1.5rem;">
-          <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Selecciona Método de Pago</label>
-          
-          <div class="payment-tabs">
-            <button class="payment-tab-btn active" id="tab-btn-card" onclick="selectPaymentMethod('card')">
-              <span class="svg-icon" style="font-size: 1.3rem;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="2" y="5" width="20" height="14" rx="3"></rect>
-                  <line x1="2" y1="10" x2="22" y2="10"></line>
-                </svg>
-              </span>
-              <span>Tarjeta</span>
-            </button>
-
-            <button class="payment-tab-btn" id="tab-btn-bizum" onclick="selectPaymentMethod('bizum')">
-              <!-- Official Bizum Vector Logo -->
-              <svg width="58" height="20" viewBox="0 0 110 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="110" height="32" rx="6" fill="#00AA9E" fill-opacity="0.15"/>
-                <path d="M16 11C16 9.34315 17.3431 8 19 8H23C25.2091 8 27 9.79086 27 12C27 13.386 26.2978 14.6074 25.2285 15.318C26.6853 16.0371 27.6875 17.5491 27.6875 19.2969C27.6875 21.8943 25.5818 24 22.9844 24H19C17.3431 24 16 22.6569 16 21V11Z" fill="#00C4B4"/>
-                <text x="36" y="21" font-family="'DM Sans', sans-serif" font-size="16" font-weight="800" fill="#00D2C2" letter-spacing="-0.5">bizum</text>
-              </svg>
-              <span>Bizum</span>
-            </button>
-
-            <button class="payment-tab-btn" id="tab-btn-paypal" onclick="selectPaymentMethod('paypal')">
-              <!-- Official PayPal Vector Logo -->
-              <svg width="58" height="20" viewBox="0 0 100 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="100" height="28" rx="6" fill="#0079C1" fill-opacity="0.15"/>
-                <path d="M18.5 7H14.2C13.8 7 13.5 7.3 13.4 7.7L11.2 21.2C11.1 21.5 11.4 21.8 11.7 21.8H14.1C14.5 21.8 14.8 21.5 14.9 21.1L15.5 17.5C15.6 17.1 15.9 16.8 16.3 16.8H17.8C20.6 16.8 22.4 15.4 22.8 12.6C23 11.4 22.7 10.3 22 9.5C21.2 8.7 19.9 8.2 18.5 7Z" fill="#00457C"/>
-                <path d="M21.5 10H17.2C16.8 10 16.5 10.3 16.4 10.7L14.2 24.2C14.1 24.5 14.4 24.8 14.7 24.8H17.1C17.5 24.8 17.8 24.5 17.9 24.1L18.5 20.5C18.6 20.1 18.9 19.8 19.3 19.8H20.8C23.6 19.8 25.4 18.4 25.8 15.6C26.3 12.7 24.5 10 21.5 10Z" fill="#0079C1"/>
-                <text x="32" y="19" font-family="'DM Sans', sans-serif" font-size="14" font-weight="800" fill="#38BDF8">PayPal</text>
-              </svg>
-              <span>PayPal</span>
-            </button>
+          <div style="margin-bottom: 14px;">
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Nombre del Restaurante / Bar</label>
+            <input type="text" id="cita-restaurante" class="form-input" required placeholder="Ej. Asador La Brasa">
           </div>
 
-          <!-- Payment Form Views -->
-          <div class="payment-details-box" id="pay-box-card">
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px;">Pago protegido con encriptación SSL</p>
-            <input type="text" class="form-input" placeholder="Número de Tarjeta (4545 •••• •••• 1234)" value="4545 0000 0000 1234" maxlength="19">
-            <div style="display: flex; gap: 8px; margin-top: 8px;">
-              <input type="text" class="form-input" placeholder="MM/AA" value="08/28" style="flex: 1;">
-              <input type="text" class="form-input" placeholder="CVV" value="789" style="flex: 1;">
-            </div>
+          <div style="margin-bottom: 14px;">
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Teléfono / WhatsApp</label>
+            <input type="tel" id="cita-telefono" class="form-input" required placeholder="Ej. 612 345 678">
           </div>
 
-          <div class="payment-details-box" id="pay-box-bizum" style="display: none;">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00C4B4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-                <line x1="12" y1="18" x2="12.01" y2="18"></line>
-              </svg>
-              <strong style="font-size: 0.85rem; color: #00D2C2;">Pasarela Oficial Bizum</strong>
-            </div>
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px;">
-              Introduce tu teléfono móvil para autorizar el cargo directo en tu app bancaria:
-            </p>
-            <input type="tel" id="bizum-phone" class="form-input" placeholder="Número de móvil Bizum" value="654 987 321">
+          <div style="margin-bottom: 14px;">
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Ciudad o Municipio</label>
+            <input type="text" id="cita-ciudad" class="form-input" placeholder="Ej. Madrid, Valencia, Bilbao...">
           </div>
 
-          <div class="payment-details-box" id="pay-box-paypal" style="display: none; text-align: center;">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 6px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 6v6l4 2"></path>
-              </svg>
-              <strong style="font-size: 0.85rem; color: #38BDF8;">PayPal Express Checkout</strong>
-            </div>
-            <p style="font-size: 0.78rem; color: var(--text-muted);">
-              Confirmación de pago instantánea con tu saldo o cuenta vinculada de PayPal.
-            </p>
+          <div style="margin-bottom: 14px;">
+            <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Plan de Interés</label>
+            <select id="cita-plan" class="form-input" style="background: var(--bg-secondary);">
+              <option value="Pro">Plan Pro (69 €/mes)</option>
+              <option value="Enterprise">Plan Enterprise (149 €/mes)</option>
+              <option value="Dudas">Quiero que me asesoren primero</option>
+            </select>
           </div>
 
-        </div>
-
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 13px; font-size: 1rem;">
+            Confirmar Solicitud de Cita
+          </button>
+        </form>
       </div>
-
-      <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--border-color); background: rgba(0,0,0,0.2);">
-        <button id="btn-confirm-checkout" onclick="executeCheckout()" class="btn btn-primary" style="width: 100%; font-size: 1.05rem;">
-          Pagar y Enviar Pedido (0.00 €)
-        </button>
-      </div>
-
     </div>
   </div>
 
-  <!-- Customer Chat Drawer (Floating) -->
-  <div class="chat-drawer" id="customer-chat-drawer">
-    <div class="chat-header">
-      <div>
-        <h4 style="font-size: 0.95rem; font-weight: 700;">Atención del Restaurante</h4>
-        <span id="cust-chat-sub" style="font-size: 0.75rem; color: var(--text-muted);">Estamos a tu disposición</span>
-      </div>
-      <button onclick="closeCustomerChat()" style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;">&times;</button>
-    </div>
-    <div class="chat-body" id="customer-chat-messages"></div>
-    <form class="chat-input-area" id="customer-chat-form">
-      <input type="text" id="customer-chat-input" class="chat-input" placeholder="Escribe aquí tu petición o duda..." autocomplete="off">
-      <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
-    </form>
-  </div>
-
-  <!-- Discreet Staff & Management Footer -->
+  <!-- Footer -->
   <footer class="customer-footer">
-    <p>© 2026 GourmetFlow • Sistema Digital para Restaurantes</p>
-    <button onclick="openStaffModal()" class="discreet-link" title="Acceso reservado a personal y gerencia">
-      <span class="svg-icon">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-        </svg>
-      </span>
-      <span>Acceso Personal / Gestión</span>
-    </button>
+    <p>© 2026 Fogonazo — Tu propia web de pedidos, sin comisiones.</p>
+    <a href="http://admin.localhost:8080/" class="discreet-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      Panel Superadmin Fogonazo
+    </a>
   </footer>
-
-  <!-- Discreet Staff Modal -->
-  <div class="modal-overlay" id="staff-modal">
-    <div class="staff-modal-card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
-        <h3 style="font-size: 1.2rem; font-weight: 800; display:flex; align-items:center; gap:8px;">
-          <span class="svg-icon" style="color: var(--brand-orange-light);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-            </svg>
-          </span>
-          <span>Panel Privado</span>
-        </h3>
-        <button onclick="closeStaffModal()" style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;">&times;</button>
-      </div>
-
-      <p style="font-size: 0.88rem; color: var(--text-muted); text-align: left;">
-        Área restringida para empleados del restaurante y administración de la plataforma:
-      </p>
-
-      <div class="staff-options">
-        <a href="restaurante.html" class="staff-btn">
-          <div style="text-align: left; display: flex; align-items: center; gap: 12px;">
-            <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(255, 94, 54, 0.15); display: flex; align-items: center; justify-content: center; color: var(--brand-orange-light);">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 18h12v3a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-3z"></path>
-                <path d="M6 14v4h12v-4"></path>
-                <path d="M5 14a4 4 0 0 1 2.5-7.5 4.5 4.5 0 0 1 9 0A4 4 0 0 1 19 14z"></path>
-              </svg>
-            </div>
-            <div>
-              <div style="font-size: 1rem; color: var(--brand-orange-light);">Panel del Restaurante</div>
-              <span style="font-size: 0.78rem; color: var(--text-dim); font-weight: normal;">Comandas en vivo, cocina, sala y métricas</span>
-            </div>
-          </div>
-          <span class="svg-icon" style="color: var(--brand-orange);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </span>
-        </a>
-
-        <a href="admin.html" class="staff-btn">
-          <div style="text-align: left; display: flex; align-items: center; gap: 12px;">
-            <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(139, 92, 246, 0.15); display: flex; align-items: center; justify-content: center; color: #a78bfa;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                <circle cx="12" cy="11" r="3"></circle>
-              </svg>
-            </div>
-            <div>
-              <div style="font-size: 1rem; color: #a78bfa;">Super Admin (Tu Panel)</div>
-              <span style="font-size: 0.78rem; color: var(--text-dim); font-weight: normal;">Control de restaurantes suscritos y facturación</span>
-            </div>
-          </div>
-          <span class="svg-icon" style="color: #a78bfa;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </span>
-        </a>
-      </div>
-    </div>
-  </div>
 
   <div id="toast-container"></div>
 
-  <script src="js/icons.js"></script>
-  <script src="js/store.js"></script>
-  <script src="js/customer.js"></script>
   <script>
-    function openStaffModal() {
-      document.getElementById('staff-modal').classList.add('open');
+    // 2. MODAL PIDE UNA CITA
+    function openCitaModal(planNombre) {
+      if (planNombre) {
+        const select = document.getElementById('cita-plan');
+        if (select) {
+          if (planNombre.includes('Enterprise')) select.value = 'Enterprise';
+          else if (planNombre.includes('Pro')) select.value = 'Pro';
+        }
+      }
+      document.getElementById('cita-modal')?.classList.add('open');
     }
-    function closeStaffModal() {
-      document.getElementById('staff-modal').classList.remove('open');
+
+    function closeCitaModal() {
+      document.getElementById('cita-modal')?.classList.remove('open');
+    }
+
+    // Cerrar al pulsar fuera en overlay
+    document.getElementById('cita-modal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'cita-modal') closeCitaModal();
+    });
+
+    function handleCitaSubmit(e) {
+      e.preventDefault();
+      const nombre = document.getElementById('cita-nombre').value.trim();
+      const restaurante = document.getElementById('cita-restaurante').value.trim();
+      const telefono = document.getElementById('cita-telefono').value.trim();
+
+      closeCitaModal();
+      document.getElementById('cita-form')?.reset();
+
+      showToast(`¡Cita solicitada, ${nombre}! Te contactaremos por WhatsApp al ${telefono} en menos de 2 horas.`, 'success');
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      const iconSvg = type === 'success'
+        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>'
+        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line></svg>';
+      toast.innerHTML = `<span class="svg-icon">${iconSvg}</span><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 4500);
     }
   </script>
 </body>

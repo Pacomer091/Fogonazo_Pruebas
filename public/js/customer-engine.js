@@ -667,6 +667,132 @@ async function handleFormCheckout(e) {
     }))
   };
 
+  const isStatic = window.location.protocol === 'file:' || 
+                   window.location.hostname.endsWith('github.io') || 
+                   window.location.pathname.endsWith('demo.html') || 
+                   window.location.pathname.endsWith('.html');
+
+  if (isStatic || !window.location.port) {
+    try {
+      let subtotalCents = 0;
+      const lines = cart.map((item, idx) => {
+        let optExtraTotal = 0;
+        const extras = (item.selectedOptions || []).map(opt => {
+          optExtraTotal += (opt.precioExtraCents || 0);
+          return {
+            opcion_id: opt.id,
+            opcion_nombre: opt.nombre,
+            precio_extra_cents: opt.precioExtraCents || 0
+          };
+        });
+        const unitCents = item.precioBaseCents + optExtraTotal;
+        const lineTotal = unitCents * item.cantidad;
+        subtotalCents += lineTotal;
+        return {
+          id: 'lin_' + Date.now() + '_' + idx,
+          producto_id: item.id,
+          nombre_producto: item.nombre,
+          cantidad: item.cantidad,
+          precio_unitario_cents: unitCents,
+          total_linea_cents: lineTotal,
+          extras: extras
+        };
+      });
+
+      const envioCents = currentServiceType === 'delivery' ? (RESTAURANTE.costeEnvioCents || 250) : 0;
+      const totalCents = subtotalCents + envioCents;
+
+      let localOrders = [];
+      try {
+        localOrders = JSON.parse(localStorage.getItem('fogon_orders') || '[]');
+      } catch (_) { localOrders = []; }
+
+      const nextOrderNum = (localOrders.length > 0 && localOrders[0].numero_comanda) ? (localOrders[0].numero_comanda + 1) : 101;
+      const trackingToken = 'trk_' + Date.now().toString(36) + Math.random().toString(36).substring(2, 6);
+      const orderId = 'ord_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+
+      const orderObj = {
+        id: orderId,
+        restaurante_id: RESTAURANTE.id || 'rest_demo',
+        numero_comanda: nextOrderNum,
+        tracking_token: trackingToken,
+        tipo_servicio: currentServiceType,
+        direccion_entrega: direccionEntrega,
+        cliente_nombre: clienteNombre,
+        cliente_telefono: clienteTelefono,
+        notas_cliente: notasCliente,
+        subtotal_cents: subtotalCents,
+        gastos_envio_cents: envioCents,
+        total_cents: totalCents,
+        subtotal_formatted: formatCents(subtotalCents),
+        gastos_envio_formatted: formatCents(envioCents),
+        total_formatted: formatCents(totalCents),
+        metodo_pago: selectedPayment,
+        estado: 'recibido',
+        created_at: new Date().toISOString(),
+        lineas: lines
+      };
+
+      if (window.supabaseClient) {
+        try {
+          const { error: supaErr } = await window.supabaseClient.from('pedidos').insert({
+            id: orderObj.id,
+            restaurante_id: orderObj.restaurante_id,
+            numero_comanda: orderObj.numero_comanda,
+            tracking_token: orderObj.tracking_token,
+            tipo_servicio: orderObj.tipo_servicio,
+            direccion_entrega: orderObj.direccion_entrega,
+            cliente_nombre: orderObj.cliente_nombre,
+            cliente_telefono: orderObj.cliente_telefono,
+            notas_cliente: orderObj.notas_cliente,
+            subtotal_cents: orderObj.subtotal_cents,
+            gastos_envio_cents: orderObj.gastos_envio_cents,
+            total_cents: orderObj.total_cents,
+            metodo_pago: orderObj.metodo_pago,
+            estado: orderObj.estado,
+            idempotency_key: idempotencyKey
+          });
+
+          if (!supaErr) {
+            const linesPayload = lines.map(l => ({
+              id: l.id,
+              pedido_id: orderObj.id,
+              restaurante_id: orderObj.restaurante_id,
+              producto_id: l.producto_id,
+              nombre_producto: l.nombre_producto,
+              cantidad: l.cantidad,
+              precio_unitario_cents: l.precio_unitario_cents,
+              total_linea_cents: l.total_linea_cents,
+              extras_json: l.extras
+            }));
+            await window.supabaseClient.from('lineas_de_pedido').insert(linesPayload);
+          }
+        } catch (supaErr) {
+          console.warn('Supabase insert note:', supaErr);
+        }
+      }
+
+      localOrders.unshift(orderObj);
+      localStorage.setItem('fogon_orders', JSON.stringify(localOrders.slice(0, 50)));
+
+      cart = [];
+      updateCartUI();
+      closeCheckoutModal();
+
+      showToast('¡Comanda aceptada! Abriendo seguimiento...');
+
+      setTimeout(() => {
+        window.location.href = `seguimiento.html?token=${trackingToken}`;
+      }, 350);
+      return;
+    } catch (err) {
+      btn.disabled = false;
+      btn.innerHTML = '<span>Confirmar y Enviar Pedido</span>';
+      showToast(err.message, 'error');
+      return;
+    }
+  }
+
   try {
     const res = await fetch('/api/orders', {
       method: 'POST',

@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>La Fogoneta Smash Burgers — Carta y Pedidos Online | Fogonazo</title>
+  <link rel="icon" type="image/png" href="img/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  
+  <style>
+    :root {
+      --brand-orange: #ff5500;
+      --brand-orange-light: #ff7a00;
+      --brand-gradient: linear-gradient(135deg, #ff5500 0%, #ff7a00 100%);
+      --brand-glow: #ff550022;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    /* Reset global y fluidez estricta para evitar scroll horizontal */
+    html, body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      min-height: 100dvh;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background: #f8fafc;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    /* Bloqueo del fondo cuando un modal/bottom sheet está abierto */
+    body.modal-open {
+      overflow: hidden !important;
+      touch-action: none;
+      height: 100dvh;
+    }
+
+    /* Espacio inferior para no tapar contenido con la barra flotante */
+    body {
+      padding-bottom: calc(84px + var(--safe-bottom));
+    }
+
+    @media (min-width: 1024px) {
+      body {
+        padding-bottom: 2rem;
+      }
+    }
+
+    /* 1. TOP HEADER */
+    .rest-nav-bar {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: calc(0.6rem + var(--safe-top)) 1rem 0.6rem;
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+      width: 100%;
+    }
+
+    .rest-nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      min-width: 0;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .rest-logo-img {
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .rest-brand-name {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .rest-demo-pill {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: #64748b;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+
+    .rest-demo-pill .short-text {
+      display: none;
+    }
+
+    .btn-nav-control {
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 6px 10px;
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: var(--radius-sm);
+    }
+
+    @media (max-width: 480px) {
+      .rest-demo-pill .full-text {
+        display: none;
+      }
+      .rest-demo-pill .short-text {
+        display: inline;
+      }
+      .btn-nav-control span {
+        display: none;
+      }
+      .btn-nav-control {
+        padding: 6px 8px;
+        min-width: 36px;
+        justify-content: center;
+      }
+    }
+
+    /* 2. RESTAURANT HERO COVER */
+    .rest-hero {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.25rem 1rem 1rem;
+      width: 100%;
+    }
+
+    .rest-hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .rest-hero-info h1 {
+      font-size: clamp(1.4rem, 4vw, 2.1rem);
+      font-weight: 900;
+      color: var(--text-main);
+      margin: 0 0 0.35rem 0;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .rest-hero-tagline {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin: 0 0 0.75rem 0;
+      line-height: 1.45;
+    }
+
+    .rest-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .meta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      background: #f1f5f9;
+      color: var(--text-muted);
+      border: 1px solid #e2e8f0;
+      white-space: nowrap;
+    }
+
+    .meta-badge.status-open {
+      background: #ecfdf5;
+      color: #047857;
+      border-color: #a7f3d0;
+      font-weight: 800;
+    }
+
+    .meta-badge.highlight {
+      background: #fff7ed;
+      color: var(--brand-orange);
+      border-color: #fed7aa;
+    }
+
+    /* 3. BUSCADOR FLUIDO (NO TAPA LA NAVEGACIÓN) */
+    .search-section {
+      background: #ffffff;
+      padding: 0.75rem 1rem 0.5rem;
+      width: 100%;
+    }
+
+    .search-section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .search-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: var(--radius-full);
+      padding: 0 14px;
+      width: 100%;
+      height: 46px;
+      transition: all 0.2s ease;
+    }
+
+    .search-input-wrap:focus-within {
+      background: #ffffff;
+      border-color: var(--brand-orange);
+      box-shadow: 0 0 0 3px rgba(255, 85, 0, 0.12);
+    }
+
+    .search-input-wrap input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 16px; /* Evita zoom automático en iOS */
+      color: var(--text-main);
+      width: 100%;
+      font-family: inherit;
+    }
+
+    .search-input-wrap input::placeholder {
+      color: #94a3b8;
+    }
+
+    /* 4. BARRA DE CATEGORÍAS PEGAJOSA (SCROLL HORIZONTAL FLUIDO) */
+    .sticky-categories-bar {
+      position: sticky;
+      top: calc(49px + var(--safe-top));
+      z-index: 50;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      width: 100%;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+    }
+
+    .categories-pills-track {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      padding: 0.6rem 1rem;
+      width: 100%;
+    }
+
+    .categories-pills-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-btn {
+      white-space: nowrap;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: var(--radius-full);
+      font-size: 0.88rem;
+      font-weight: 700;
+      border: 1.5px solid #e2e8f0;
+      background: #ffffff;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      scroll-snap-align: start;
+      flex-shrink: 0;
+      touch-action: manipulation;
+      transition: all 0.15s ease;
+    }
+
+    .cat-btn:active {
+      transform: scale(0.97);
+    }
+
+    .cat-btn.active {
+      background: var(--brand-orange);
+      color: #ffffff;
+      border-color: var(--brand-orange);
+      box-shadow: 0 3px 10px rgba(255, 85, 0, 0.25);
+    }
+
+    /* 5. LAYOUT PRINCIPAL: CARTA + CARRITO PC */
+    .rest-main-wrapper {
+      max-width: 1200px;
+      margin: 1rem auto 3rem;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    @media (min-width: 1024px) {
+      .rest-main-wrapper {
+        grid-template-columns: 1fr 360px;
+        margin: 1.5rem auto 4rem;
+        gap: 2rem;
+      }
+    }
+
+    .menu-column {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      width: 100%;
+    }
+
+    .category-section-block {
+      scroll-margin-top: 110px;
+      width: 100%;
+    }
+
+    .category-title {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--text-main);
+      margin: 0 0 0.85rem 0;
+      letter-spacing: -0.01em;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 6px;
+    }
+
+    .dishes-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      width: 100%;
+    }
+
+    @media (min-width: 640px) {
+      .dishes-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+    }
+
+    /* Tarjeta de Plato (Mobile-First) */
+    .dish-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      gap: 12px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      touch-action: manipulation;
+      width: 100%;
+      min-width: 0;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .dish-card:active {
+      background: #fbfcfe;
+    }
+
+    .dish-info {
+      flex: 1;
+      min-width: 0; /* Vital para truncado limpio de texto */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .dish-name {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.3;
+      margin: 0 0 4px 0;
+      word-break: break-word;
+    }
+
+    .dish-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin: 0 0 8px 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .dish-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .dish-price {
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+
+    .btn-add-dish {
+      background: #fff7ed;
+      color: var(--brand-orange);
+      border: 1.5px solid #fed7aa;
+      border-radius: var(--radius-full);
+      padding: 0 14px;
+      min-height: 44px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      cursor: pointer;
+      touch-action: manipulation;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .btn-add-dish:active {
+      background: var(--brand-orange);
+      color: #ffffff;
+      border-color: var(--brand-orange);
+    }
+
+    /* Imagen con aspect-ratio fijo para evitar CLS (Cumulative Layout Shift) */
+    .dish-image-wrap {
+      width: 90px;
+      height: 90px;
+      min-width: 90px;
+      min-height: 90px;
+      aspect-ratio: 1 / 1;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #f1f5f9;
+      position: relative;
+    }
+
+    .dish-img {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* 6. SIDEBAR CARRITO PERSISTENTE (SOLO DESKTOP) */
+    .sidebar-cart-box {
+      display: none;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+      position: sticky;
+      top: 120px;
+      padding: 1.25rem;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    @media (min-width: 1024px) {
+      .sidebar-cart-box {
+        display: flex;
+      }
+    }
+
+    .service-toggle-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: var(--radius-sm);
+      gap: 3px;
+    }
+
+    .service-btn {
+      min-height: 44px;
+      padding: 0 8px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      touch-action: manipulation;
+      transition: all 0.2s ease;
+    }
+
+    .service-btn.active {
+      background: #ffffff;
+      color: var(--text-main);
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+    }
+
+    .min-order-alert {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-size: 0.8rem;
+    }
+
+    .min-order-bar-track {
+      width: 100%;
+      height: 6px;
+      background: #fed7aa;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .min-order-bar-fill {
+      height: 100%;
+      background: var(--brand-orange);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    .cart-items-container {
+      max-height: 260px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .cart-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      font-size: 0.88rem;
+      border-bottom: 1px dashed #f1f5f9;
+      padding-bottom: 8px;
+      gap: 8px;
+    }
+
+    .cart-qty-ctrl {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .btn-qty {
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: var(--text-main);
+      font-size: 1.2rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .btn-qty:active {
+      background: #f1f5f9;
+    }
+
+    .cart-totals-breakdown {
+      border-top: 1px solid var(--border-color);
+      padding-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.88rem;
+    }
+
+    .cart-total-row {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+    }
+
+    .cart-total-row.grand-total {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--text-main);
+      border-top: 1px solid #f1f5f9;
+      padding-top: 6px;
+    }
+
+    /* 7. BARRA INFERIOR FIJA MÓVIL (SIEMPRE VISIBLE) */
+    .mobile-cart-float {
+      display: block;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 55;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border-color);
+      padding: 0.75rem 1rem calc(0.75rem + var(--safe-bottom));
+      box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.08);
+      width: 100%;
+    }
+
+    @media (min-width: 1024px) {
+      .mobile-cart-float {
+        display: none;
+      }
+    }
+
+    .btn-mobile-checkout {
+      width: 100%;
+      min-height: 50px;
+      padding: 0 16px;
+      font-size: 0.98rem;
+      font-weight: 800;
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 14px rgba(255, 85, 0, 0.28);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      touch-action: manipulation;
+    }
+
+    .btn-mobile-checkout:disabled {
+      background: #cbd5e1 !important;
+      color: #64748b !important;
+      box-shadow: none !important;
+      cursor: not-allowed;
+      border: 1px solid #cbd5e1 !important;
+    }
+
+    .cart-badge-pill {
+      background: rgba(255, 255, 255, 0.25);
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 900;
+    }
+
+    /* 8. MODALES / BOTTOM SHEETS NATIVOS PARA MÓVIL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: flex-end; /* Bottom sheet en móvil */
+      justify-content: center;
+      padding: 0;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 100%;
+      max-height: 90dvh;
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -10px 40px rgba(15, 23, 42, 0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: sheetSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      padding-bottom: var(--safe-bottom);
+    }
+
+    @keyframes sheetSlideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    @media (min-width: 768px) {
+      .modal-overlay {
+        align-items: center;
+        padding: 1.5rem;
+      }
+      .modal-card {
+        max-width: 520px;
+        max-height: 85vh;
+        border-radius: var(--radius-lg);
+        animation: none;
+        padding-bottom: 0;
+      }
+    }
+
+    .sheet-drag-handle {
+      width: 36px;
+      height: 4px;
+      border-radius: 2px;
+      background: #cbd5e1;
+      margin: 10px auto 4px auto;
+      flex-shrink: 0;
+    }
+
+    @media (min-width: 768px) {
+      .sheet-drag-handle {
+        display: none;
+      }
+    }
+
+    .modal-header {
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      background: #ffffff;
+    }
+
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin: 0;
+      color: var(--text-main);
+    }
+
+    .btn-close-modal {
+      min-width: 44px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: #f1f5f9;
+      border-radius: 50%;
+      color: var(--text-muted);
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .btn-close-modal:active {
+      background: #e2e8f0;
+    }
+
+    .modal-body {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      overscroll-behavior: contain;
+    }
+
+    .modal-footer {
+      position: sticky;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      background: #ffffff;
+      border-top: 1px solid var(--border-color);
+      padding: 0.85rem 1.25rem;
+      box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.05);
+      flex-shrink: 0;
+    }
+
+    .modal-footer .btn {
+      min-height: 50px;
+      font-size: 1rem;
+      font-weight: 800;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      touch-action: manipulation;
+    }
+
+    /* Grupos de opciones y extras */
+    .opt-group-box {
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      background: #fbfcfe;
+    }
+
+    .opt-group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .opt-group-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 0;
+    }
+
+    .opt-req-tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .opt-req-tag.required {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .opt-req-tag.optional {
+      background: #f1f5f9;
+      color: var(--text-muted);
+    }
+
+    .opt-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .opt-label-row {
+      min-height: 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: #ffffff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-main);
+      touch-action: manipulation;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .opt-label-row:active, .opt-label-row.selected {
+      border-color: var(--brand-orange);
+      background: #fff7ed;
+    }
+
+    .opt-input-ctrl {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--brand-orange);
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    /* 9. FORMULARIOS MOBILE-FIRST (16PX PARA EVITAR ZOOM EN IOS) */
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      font-size: 16px !important; /* CRÍTICO: Previene el zoom automático de Safari iOS */
+      min-height: 48px;
+      padding: 12px 14px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      font-family: inherit;
+      color: #0f172a;
+      background: #ffffff;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      -webkit-appearance: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--brand-orange);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 85, 0, 0.15);
+    }
+
+    .payment-selector-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .btn-pay-method {
+      min-height: 44px;
+      padding: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: all 0.15s ease;
+    }
+
+    .btn-pay-method.active {
+      border-color: var(--brand-orange);
+      background: #fff7ed;
+      color: var(--brand-orange);
+      font-weight: 800;
+    }
+
+    .demo-payment-notice {
+      background: #fff7ed;
+      border: 1.5px dashed #ea580c;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #9a3412;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      line-height: 1.4;
+    }
+
+    .field-error-msg {
+      display: none;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #dc2626;
+      margin-top: 4px;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    window.SUPABASE_CONFIG = {
+      url: 'https://bmikdaufucnrezcbssab.supabase.co',
+      key: 'sb_publishable__Jw9hiEizMUSztT-NG559w_ACP1aMrr'
+    };
+    try {
+      window.supabaseClient = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.key);
+    } catch (e) {
+      console.warn('Supabase init notice:', e);
+    }
+  </script>
+</head>
+<body>
+
+  <!-- 1. BARRA SUPERIOR -->
+  <header class="rest-nav-bar">
+    <div class="rest-nav-inner">
+      <a href="index.html" class="brand-wrap">
+        <img src="img/logo.png" alt="Fogonazo" class="rest-logo-img">
+        <span class="rest-brand-name">La Fogoneta Smash Burgers</span>
+      </a>
+      <div class="nav-actions">
+        <span class="rest-demo-pill">
+          <span class="full-text">Restaurante de ejemplo</span>
+          <span class="short-text">Ejemplo</span>
+        </span>
+        <a href="control.html" target="_blank" class="btn btn-secondary btn-nav-control" title="Panel de Cocina">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          <span>Cocina</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 2. CABECERA DEL RESTAURANTE -->
+  <section class="rest-hero">
+    <div class="rest-hero-inner">
+      <div class="rest-hero-info">
+        <h1>La Fogoneta Smash Burgers</h1>
+        <p class="rest-hero-tagline">Smash burgers artesanas a la brasa, patatas trufadas y batidos</p>
+        <div class="rest-meta-row">
+          <span class="meta-badge status-open">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg>
+            Abierto ahora
+          </span>
+          <span class="meta-badge highlight">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            25-35 min
+          </span>
+          <span class="meta-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+            Envío: 2,50 € • Mín. 14,00 €
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. BUSCADOR EN VIVO FLUIDO -->
+  <section class="search-section">
+    <div class="search-section-inner">
+      <div class="search-input-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="dish-search" placeholder="Buscar hamburguesa, entrante, bebida..." oninput="handleSearch(this.value)" autocomplete="off">
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. BARRA DE CATEGORÍAS PEGAJOSA (SCROLL HORIZONTAL) -->
+  <nav class="sticky-categories-bar" id="sticky-cat-nav">
+    <div class="categories-pills-track" id="cat-pills-container">
+      <!-- Renderizado dinámico -->
+    </div>
+  </nav>
+
+  <!-- 5. CONTENIDO PRINCIPAL: CARTA + CARRITO LATERAL (PC) -->
+  <main class="rest-main-wrapper">
+    <!-- Columna de Carta -->
+    <div class="menu-column" id="menu-sections-container">
+      <!-- Renderizado dinámico de categorías y platos -->
+    </div>
+
+    <!-- Columna Carrito Persistente (Desktop) -->
+    <aside class="sidebar-cart-box" id="desktop-cart">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="font-size:1.1rem; font-weight:900; margin:0;">Tu Pedido</h3>
+        <span style="font-size:0.8rem; color:var(--text-muted);" id="desktop-cart-count">0 platos</span>
+      </div>
+
+      <!-- Selector: A domicilio vs Recogida -->
+      <div class="service-toggle-wrap">
+        <button class="service-btn active" id="btn-service-delivery" onclick="setServiceType('delivery')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+          <span>A Domicilio</span>
+        </button>
+        <button class="service-btn" id="btn-service-takeaway" onclick="setServiceType('recogida')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+          <span>Para Recoger</span>
+        </button>
+      </div>
+
+      <!-- Barra de progreso de pedido mínimo (solo si es domicilio) -->
+      <div class="min-order-alert" id="min-order-box">
+        <div style="display:flex; justify-content:space-between;">
+          <span id="min-order-text">Pedido mínimo: 14,00 €</span>
+          <strong id="min-order-diff">Faltan 14,00 €</strong>
+        </div>
+        <div class="min-order-bar-track">
+          <div class="min-order-bar-fill" id="min-order-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Lista de platos en el carrito desktop -->
+      <div class="cart-items-container" id="desktop-cart-items">
+        <div style="text-align:center; padding:2rem 0; color:var(--text-muted); font-size:0.85rem;">
+          Tu cesta está vacía.<br>Selecciona platos de la carta.
+        </div>
+      </div>
+
+      <!-- Desglose de Totales -->
+      <div class="cart-totals-breakdown">
+        <div class="cart-total-row">
+          <span>Subtotal</span>
+          <span id="desktop-subtotal">0,00 €</span>
+        </div>
+        <div class="cart-total-row" id="desktop-delivery-row">
+          <span>Gastos de entrega</span>
+          <span id="desktop-shipping">2,50 €</span>
+        </div>
+        <div class="cart-total-row grand-total">
+          <span>Total</span>
+          <span id="desktop-total">0,00 €</span>
+        </div>
+      </div>
+
+      <button onclick="openCheckoutModal()" class="btn btn-primary btn-checkout" id="btn-desktop-checkout" disabled>
+        <span>Tramitar Pedido</span>
+        <span id="desktop-btn-total">0,00 €</span>
+      </button>
+    </aside>
+  </main>
+
+  <!-- 6. BARRA FLOTANTE DE CARRITO PARA MÓVIL (SIEMPRE VISIBLE) -->
+  <div class="mobile-cart-float" id="mobile-cart-bar">
+    <button onclick="openCheckoutModal()" class="btn btn-primary btn-mobile-checkout" id="btn-mobile-checkout" disabled>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span class="cart-badge-pill" id="mobile-badge-count">0</span>
+        <span id="mobile-cart-btn-label">Ver pedido (0)</span>
+      </div>
+      <span id="mobile-btn-total">0,00 €</span>
+    </button>
+  </div>
+
+  <!-- 7. MODAL / BOTTOM SHEET: PERSONALIZACIÓN DEL PLATO (EXTRAS) -->
+  <div class="modal-overlay" id="dish-modal" onclick="handleOverlayClick(event, 'dish-modal')">
+    <div class="modal-card">
+      <div class="sheet-drag-handle"></div>
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-dish-name">Nombre del plato</h3>
+        <button onclick="closeDishModal()" class="btn-close-modal" aria-label="Cerrar modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.88rem; color:var(--text-muted); margin:0;" id="modal-dish-desc">Descripción...</p>
+
+        <!-- Grupos de opciones y extras se insertan aquí -->
+        <div id="modal-groups-container" style="display:flex; flex-direction:column; gap:14px;"></div>
+
+        <!-- Selector de cantidad táctil amplio (mínimo 44x44px) -->
+        <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid var(--border-color);">
+          <span style="font-size:0.95rem; font-weight:800;">Cantidad</span>
+          <div style="display:inline-flex; align-items:center; gap:12px;">
+            <button class="btn-qty" onclick="changeModalQty(-1)">&minus;</button>
+            <strong id="modal-qty" style="font-size:1.2rem; min-width:24px; text-align:center;">1</strong>
+            <button class="btn-qty" onclick="changeModalQty(1)">&plus;</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button onclick="confirmAddDishToCart()" class="btn btn-primary" id="btn-modal-add">
+          <span>Añadir al Pedido</span>
+          <span id="modal-add-price">0,00 €</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. MODAL / BOTTOM SHEET: REVISIÓN DE CARRITO, DATOS Y PAGO SIMULADO -->
+  <div class="modal-overlay" id="checkout-modal" onclick="handleOverlayClick(event, 'checkout-modal')">
+    <div class="modal-card">
+      <div class="sheet-drag-handle"></div>
+      <div class="modal-header">
+        <h3 class="modal-title">Tu Pedido y Pago</h3>
+        <button onclick="closeCheckoutModal()" class="btn-close-modal" aria-label="Cerrar comanda">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- Aviso obligatorio de Modo Demo -->
+        <div class="demo-payment-notice">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <div>MODO DEMOSTRACIÓN: No se realizará ningún cobro real en tu tarjeta o Bizum.</div>
+        </div>
+
+        <!-- Selector de Servicio en Móvil: A Domicilio / Para Recoger -->
+        <div class="service-toggle-wrap">
+          <button type="button" class="service-btn active" id="modal-btn-delivery" onclick="setServiceType('delivery')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+            <span>A Domicilio</span>
+          </button>
+          <button type="button" class="service-btn" id="modal-btn-takeaway" onclick="setServiceType('recogida')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+            <span>Para Recoger</span>
+          </button>
+        </div>
+
+        <!-- Alerta de Pedido Mínimo en Modal -->
+        <div class="min-order-alert" id="modal-min-order-box">
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span>Pedido mínimo: 14,00 €</span>
+            <strong id="modal-min-diff">Faltan 14,00 €</strong>
+          </div>
+          <div class="min-order-bar-track">
+            <div class="min-order-bar-fill" id="modal-min-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Lista de platos en el pedido móvil -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px;">
+          <h4 style="font-size:0.9rem; font-weight:800; margin:0 0 10px 0; color:var(--text-main);">Platos en tu cesta:</h4>
+          <div id="modal-cart-items-list" style="display:flex; flex-direction:column; gap:10px;">
+            <!-- Rellenado dinámicamente -->
+          </div>
+        </div>
+
+        <form onsubmit="handleFormCheckout(event)" id="checkout-form">
+          <!-- Datos de contacto -->
+          <div class="form-group">
+            <label for="cust-name" class="form-label">Tu nombre completo</label>
+            <input type="text" id="cust-name" class="form-input" required placeholder="Ej. Carlos Mendoza" autocomplete="name" value="Carlos Mendoza">
+            <span class="field-error-msg" id="err-cust-name">Por favor, escribe tu nombre.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="cust-phone" class="form-label">Teléfono de contacto</label>
+            <input type="tel" id="cust-phone" class="form-input" required placeholder="Ej. 654 321 000" autocomplete="tel" value="654 321 000">
+            <span class="field-error-msg" id="err-cust-phone">Introduce un teléfono de contacto válido.</span>
+          </div>
+
+          <!-- Dirección si es entrega a domicilio -->
+          <div class="form-group" id="checkout-address-group">
+            <label for="cust-address" class="form-label">Dirección de entrega (calle, número, piso y puerta)</label>
+            <input type="text" id="cust-address" class="form-input" placeholder="Calle Gran Vía 32, 4º B" autocomplete="street-address" value="Calle Gran Vía 32, 4º B">
+            <span class="field-error-msg" id="err-cust-address">La dirección es obligatoria para pedidos a domicilio.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="cust-notes" class="form-label">Notas para el local o repartidor (opcional)</label>
+            <input type="text" id="cust-notes" class="form-input" placeholder="Alergias, timbre estropeado, llamar al llegar...">
+          </div>
+
+          <!-- Selector de Método de Pago -->
+          <div class="form-group">
+            <label class="form-label">Método de pago (simulado)</label>
+            <div class="payment-selector-grid">
+              <button type="button" class="btn-pay-method active" id="pay-btn-card" onclick="setPaymentMethod('tarjeta')">
+                <span>Tarjeta</span>
+              </button>
+              <button type="button" class="btn-pay-method" id="pay-btn-bizum" onclick="setPaymentMethod('bizum')">
+                <span>Bizum</span>
+              </button>
+              <button type="button" class="btn-pay-method" id="pay-btn-cash" onclick="setPaymentMethod('efectivo')">
+                <span>Efectivo</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Desglose de totales en el modal -->
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px; font-size:0.9rem; margin-bottom:0.5rem;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+              <span>Subtotal comanda</span>
+              <strong id="modal-subtotal-val">0,00 €</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px;" id="modal-shipping-row">
+              <span>Gastos de entrega</span>
+              <strong id="modal-shipping-val">0,00 €</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:1.1rem; font-weight:900; color:var(--text-main); border-top:1px solid #e2e8f0; padding-top:6px;">
+              <span>Total a pagar</span>
+              <strong style="color:var(--brand-orange);" id="modal-total-val">0,00 €</strong>
+            </div>
+          </div>
+
+          <div class="modal-footer" style="padding:10px 0 0 0; border:none; box-shadow:none;">
+            <button type="submit" class="btn btn-primary" id="btn-submit-order" style="min-height:50px; font-size:1rem; font-weight:800; width:100%; justify-content:center;">
+              <span>Confirmar y Enviar Pedido</span>
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <!-- Inyección de Datos del Servidor -->
+  <script>
+    const RESTAURANTE = {
+      id: "rest_demo",
+      slug: "demo",
+      nombre: "La Fogoneta Smash Burgers",
+      moneda: "€",
+      pedidoMinimoCents: Number("1400"),
+      costeEnvioCents: Number("250")
+    };
+    const MENU_DATA = [{"id":"cat_demo_1","nombre":"Smash Burgers a la Brasa","orden":1,"productos":[{"id":"prod_b2","nombre":"Smash Bacon Cheese Clásica","descripcion":"Doble disco de carne smash con costra caramelizada, cuatro tiras de bacon ahumado crujiente, queso cheddar fundido y nuestra salsa burger secreta Fogonazo.","precio_cents":1050,"imagen_url":"https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=600&auto=format&fit=crop&q=80","disponible":true,"destacado":true,"alergenos":["gluten","lacteos","huevo","mostaza"],"grupos_opciones":[{"id":"grp_b2_punto","producto_id":"prod_b2","nombre":"Punto de la Carne","obligatorio":true,"max_seleccion":1,"orden":1,"opciones":[{"id":"opt_b2_p1","nombre":"Al punto con costra crujiente","precio_extra_cents":0,"disponible":true},{"id":"opt_b2_p2","nombre":"Bien pasada","precio_extra_cents":0,"disponible":true}]},{"id":"grp_b2_extras","producto_id":"prod_b2","nombre":"Extras Opcionales","obligatorio":false,"max_seleccion":3,"orden":2,"opciones":[{"id":"opt_b2_e1","nombre":"Doble ración de bacon (+1,20 €)","precio_extra_cents":120,"disponible":true},{"id":"opt_b2_e2","nombre":"Cebolla crujiente frita (+0,80 €)","precio_extra_cents":80,"disponible":true},{"id":"opt_b2_e3","nombre":"Huevo frito a la plancha (+1,20 €)","precio_extra_cents":120,"disponible":true}]}]},{"id":"prod_b1","nombre":"Smash Trufada Doble","descripcion":"Dos patties crujientes de 90g de vaca rubia madurada, doble cheddar inglés, mayonesa trufada casera y cebolla pochada en pan brioche artesano tostado con mantequilla.","precio_cents":1190,"imagen_url":"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&auto=format&fit=crop&q=80","disponible":true,"destacado":true,"alergenos":["gluten","lacteos","huevo"],"grupos_opciones":[{"id":"grp_b1_punto","producto_id":"prod_b1","nombre":"Punto de la Carne","obligatorio":true,"max_seleccion":1,"orden":1,"opciones":[{"id":"opt_b1_p1","nombre":"Al punto con costra crujiente","precio_extra_cents":0,"disponible":true},{"id":"opt_b1_p2","nombre":"Bien hecha y tostada","precio_extra_cents":0,"disponible":true}]},{"id":"grp_b1_extras","producto_id":"prod_b1","nombre":"Añade Extras a tu Burger","obligatorio":false,"max_seleccion":3,"orden":2,"opciones":[{"id":"opt_b1_e1","nombre":"Bacon crujiente caramelizado (+1,20 €)","precio_extra_cents":120,"disponible":true},{"id":"opt_b1_e2","nombre":"Queso cheddar ahumado extra (+1,00 €)","precio_extra_cents":100,"disponible":true},{"id":"opt_b1_e3","nombre":"Huevo campero frito a la plancha (+1,20 €)","precio_extra_cents":120,"disponible":true},{"id":"opt_b1_e4","nombre":"Pepinillos encurtidos artesanos (+0,50 €)","precio_extra_cents":50,"disponible":true}]},{"id":"grp_b1_salsa","producto_id":"prod_b1","nombre":"Salsa para Acompañar","obligatorio":false,"max_seleccion":2,"orden":3,"opciones":[{"id":"opt_b1_s1","nombre":"Salsa Mayo Trufada Extra (+1,00 €)","precio_extra_cents":100,"disponible":true},{"id":"opt_b1_s2","nombre":"Salsa Fogonazo Secreta (+0,80 €)","precio_extra_cents":80,"disponible":true},{"id":"opt_b1_s3","nombre":"Barbacoa al Bourbon (+0,80 €)","precio_extra_cents":80,"disponible":true}]}]},{"id":"prod_b3","nombre":"Smash Pollo Sureño Crujiente","descripcion":"Contramuslo de pollo de corral marinado 24 horas en suero de leche, frito extracrujiente, salsa mayo-chipotle suave, ensalada de col fresca y pepinillos agridulces.","precio_cents":990,"imagen_url":"https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?w=600&auto=format&fit=crop&q=80","disponible":true,"destacado":false,"alergenos":["gluten","lacteos","huevo"],"grupos_opciones":[]}]},{"id":"cat_demo_2","nombre":"Entrantes & Fries","orden":2,"productos":[{"id":"prod_e1","nombre":"Patatas Rústicas Trufadas con Parmesano","descripcion":"Patatas naturales de corte grueso doble fritura con aceite de trufa blanca de temporada, lluvia abundante de queso Parmigiano Reggiano 24 meses y orégano silvestre.","precio_cents":550,"imagen_url":"https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=600&auto=format&fit=crop&q=80","disponible":true,"destacado":true,"alergenos":["lacteos"],"grupos_opciones":[]},{"id":"prod_e2","nombre":"Alitas Glaseadas al Bourbon & Miel (6u)","descripcion":"Alitas de pollo carnosas a la brasa de encina con glaseado casero de salsa barbacoa al bourbon y miel de romero, con toque de sésamo blanco tostado.","precio_cents":720,"imagen_url":"https://images.unsplash.com/photo-1527477378696-7a8be0d80d21?w=600&auto=format&fit=crop&q=80","disponible":true,"destacado":false,"alergenos":["sesamo","sulfitos"],"grupos_opciones":[]}]},{"id":"cat_demo_3","nombre":"Postres Caseros","orden":3,"productos":[{"id":"prod_p1","nombre":"Tarta de Queso Fluida al Horno","descripcion":"Elaborada artesanalmente cada mañana con queso crema e Idiazábal ahumado. Textura fundente en el corazón con base crujiente de galleta y coulis de frambuesa.","precio_cents":590,"imagen_url":"https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=600&auto=format&fit=crop&q=80","disponible":true,"destacado":true,"alergenos":["gluten","lacteos","huevo"],"grupos_opciones":[]}]},{"id":"cat_demo_4","nombre":"Bebidas & Cervezas","orden":4,"productos":[{"id":"prod_beb1","nombre":"Cerveza Artesana Fogonazo IPA (33cl)","descripcion":"Cerveza rubia aromática con lúpulos cítricos y amargor equilibrado, maridaje perfecto para nuestras carnes a la brasa.","precio_cents":350,"imagen_url":"https://images.unsplash.com/photo-1608270586620-248524c67de9?w=600&auto=format&fit=crop&q=80","disponible":true,"destacado":false,"alergenos":["gluten"],"grupos_opciones":[]},{"id":"prod_beb2","nombre":"Limonada Casera de Jengibre y Menta","descripcion":"Zumo natural de limones recién exprimidos con infusión de jengibre fresco, hojas de hierbabuena y azúcar de caña.","precio_cents":280,"imagen_url":"https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600&auto=format&fit=crop&q=80","disponible":true,"destacado":false,"alergenos":[],"grupos_opciones":[]}]}];
+  </script>
+
+  <script src="js/customer-engine.js"></script>
+</body>
+</html>

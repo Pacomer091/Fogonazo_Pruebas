@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Seguimiento de tu Comanda — La Fogoneta Smash Burgers</title>
+  <link rel="icon" type="image/png" href="img/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    :root {
+      --brand-orange: #ff5500;
+      --brand-orange-light: #ff7a00;
+      --brand-gradient: linear-gradient(135deg, #ff5500 0%, #ff7a00 100%);
+    }
+
+    body {
+      background: #f8fafc;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      margin: 0;
+      padding: 0;
+    }
+
+    .tracking-nav {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.85rem 1.25rem;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+    }
+
+    .nav-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .brand-logo-img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .brand-name {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--text-main);
+    }
+
+    .demo-tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: #64748b;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .tracking-container {
+      max-width: 800px;
+      margin: 1.5rem auto 4rem;
+      padding: 0 1rem;
+    }
+
+    .tracking-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 30px -4px rgba(15, 23, 42, 0.05);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tracking-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--brand-gradient);
+    }
+
+    .tracking-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .order-title {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--text-main);
+      margin: 0 0 4px 0;
+    }
+
+    .order-timestamp {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    .live-pulse-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    /* Steps Progress Bar */
+    .progress-track-wrapper {
+      margin: 2rem 0;
+    }
+
+    .progress-steps-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      position: relative;
+      text-align: center;
+      gap: 8px;
+    }
+
+    .progress-step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .step-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      color: #94a3b8;
+      border: 2px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 800;
+      transition: all 0.3s ease;
+    }
+
+    .step-circle.active {
+      background: var(--brand-orange);
+      color: #ffffff;
+      border-color: var(--brand-orange);
+      box-shadow: 0 4px 12px rgba(255, 85, 0, 0.3);
+      transform: scale(1.08);
+    }
+
+    .step-circle.completed {
+      background: #10b981;
+      color: #ffffff;
+      border-color: #10b981;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .step-label.active {
+      color: var(--brand-orange);
+      font-weight: 800;
+    }
+
+    .status-highlight-banner {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-icon-wrap {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #ffedd5;
+      color: var(--brand-orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .status-main-desc {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: #9a3412;
+      margin: 0 0 2px 0;
+    }
+
+    .status-sub-desc {
+      font-size: 0.82rem;
+      color: #c2410c;
+      margin: 0;
+    }
+
+    /* Order Details */
+    .details-box {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    }
+
+    .details-heading {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin: 0 0 1rem 0;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .items-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      font-size: 0.9rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .item-qty-badge {
+      font-weight: 800;
+      color: var(--brand-orange);
+      background: #fff7ed;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      margin-right: 6px;
+    }
+
+    .item-extras {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+      padding-left: 28px;
+    }
+
+    .totals-breakdown {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 2px dashed #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .breakdown-row.total {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--text-main);
+      padding-top: 6px;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .service-info-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      margin-top: 1.25rem;
+      font-size: 0.85rem;
+      line-height: 1.45;
+    }
+
+    .tracking-footer-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .tracking-card {
+        padding: 1.25rem;
+      }
+      .progress-steps-row {
+        gap: 4px;
+      }
+      .step-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+      }
+      .step-label {
+        font-size: 0.68rem;
+      }
+      .tracking-footer-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .tracking-footer-actions .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    window.SUPABASE_CONFIG = {
+      url: 'https://bmikdaufucnrezcbssab.supabase.co',
+      key: 'sb_publishable__Jw9hiEizMUSztT-NG559w_ACP1aMrr'
+    };
+    try {
+      window.supabaseClient = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.key);
+    } catch (e) {
+      console.warn('Supabase init notice:', e);
+    }
+  </script>
+</head>
+<body>
+
+  <header class="tracking-nav">
+    <div class="nav-inner">
+      <a href="demo.html" class="brand-group">
+        <img src="img/logo.png" alt="Fogonazo" class="brand-logo-img">
+        <span class="brand-name">La Fogoneta Smash Burgers</span>
+      </a>
+      <span class="demo-tag">Restaurante de ejemplo</span>
+    </div>
+  </header>
+
+  <main class="tracking-container">
+    <div class="tracking-card">
+      <div class="tracking-header">
+        <div>
+          <h1 class="order-title" id="display-order-num">Comanda #108</h1>
+          <span class="order-timestamp" id="display-timestamp">Registrada recientemente</span>
+        </div>
+        <div class="live-pulse-badge">
+          <span class="pulse-dot"></span>
+          <span>Actualización en vivo</span>
+        </div>
+      </div>
+
+      <!-- Barra de Pasos Visuales -->
+      <div class="progress-track-wrapper">
+        <div class="progress-steps-row">
+          <div class="progress-step-item" id="step-col-recibido">
+            <div class="step-circle" id="circle-recibido">1</div>
+            <span class="step-label" id="label-recibido">Recibido</span>
+          </div>
+
+          <div class="progress-step-item" id="step-col-cocina">
+            <div class="step-circle" id="circle-cocina">2</div>
+            <span class="step-label" id="label-cocina">En Cocina</span>
+          </div>
+
+          <div class="progress-step-item" id="step-col-listo">
+            <div class="step-circle" id="circle-listo">3</div>
+            <span class="step-label" id="label-listo">Listo / En camino</span>
+          </div>
+
+          <div class="progress-step-item" id="step-col-entregado">
+            <div class="step-circle" id="circle-entregado">4</div>
+            <span class="step-label" id="label-entregado">Entregado</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Banner de Estado Destacado -->
+      <div class="status-highlight-banner" id="status-banner">
+        <div class="status-icon-wrap" id="status-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        </div>
+        <div>
+          <h3 class="status-main-desc" id="status-main-text">Tu comanda ha sido recibida</h3>
+          <p class="status-sub-desc" id="status-sub-text">Cocina está preparando los ingredientes.</p>
+        </div>
+      </div>
+
+      <!-- Información del Servicio -->
+      <div class="service-info-card">
+        <div><strong>Tipo de pedido:</strong> <span id="display-tipo-servicio">Entrega a domicilio</span></div>
+        <div id="display-direccion-row" style="margin-top:4px;"><strong>Dirección de entrega:</strong> <span id="display-direccion">Calle Serrano 42, 2º A</span></div>
+        <div style="margin-top:4px;"><strong>Cliente:</strong> <span id="display-cliente">Laura Gómez</span> (<span id="display-telefono">612 345 678</span>)</div>
+        <div id="display-notas-row" style="margin-top:4px; color:#0369a1;"><strong>Notas:</strong> <span id="display-notas">Timbre roto, llamar al móvil al llegar por favor</span></div>
+      </div>
+    </div>
+
+    <!-- Desglose de la Comanda -->
+    <div class="details-box">
+      <h2 class="details-heading">
+        <span>Resumen del Pedido</span>
+        <span style="font-size:0.8rem; font-weight:700; color:#10b981;">Pago Confirmado (Demo)</span>
+      </h2>
+
+      <ul class="items-list" id="items-list-container">
+        <!-- Rellenado dinámicamente -->
+      </ul>
+
+      <div class="totals-breakdown">
+        <div class="breakdown-row">
+          <span>Subtotal platos</span>
+          <span id="display-subtotal">22,40 €</span>
+        </div>
+        <div class="breakdown-row" id="row-envio">
+          <span>Gastos de entrega</span>
+          <span id="display-envio">2,50 €</span>
+        </div>
+        <div class="breakdown-row total">
+          <span>Total</span>
+          <span id="display-total" style="color:var(--brand-orange);">24,90 €</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tracking-footer-actions">
+      <a href="demo.html" class="btn btn-secondary">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        <span>Volver a la carta del restaurante</span>
+      </a>
+
+      <a href="control.html" target="_blank" class="btn btn-primary" style="font-size:0.85rem; padding:10px 16px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        <span>Abrir panel de cocina para cambiar estado</span>
+      </a>
+    </div>
+  </main>
+
+  
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const ACTIVE_TOKEN = urlParams.get('token') || "trk_demo_sample_1";
+
+    function updateTrackingUI(order) {
+      if (!order) return;
+
+      const estado = order.estado || 'recibido';
+      
+      // Actualiza badges del encabezado
+      document.getElementById('header-order-num').textContent = '#' + order.numero_comanda;
+      document.getElementById('display-service-type').textContent = order.tipo_servicio === 'delivery' ? 'Entrega a domicilio' : 'Recogida en local';
+      document.getElementById('display-address').textContent = order.direccion_entrega || 'Recogida en el local';
+      document.getElementById('display-name').textContent = order.cliente_nombre;
+      document.getElementById('display-phone').textContent = order.cliente_telefono;
+      document.getElementById('display-notes').textContent = order.notas_cliente || 'Sin notas especiales';
+
+      // Totales
+      const subFormatted = order.subtotal_formatted || ((order.subtotal_cents||0)/100).toFixed(2).replace('.', ',') + ' €';
+      const envioFormatted = order.gastos_envio_formatted || ((order.gastos_envio_cents||0)/100).toFixed(2).replace('.', ',') + ' €';
+      const totalFormatted = order.total_formatted || ((order.total_cents||0)/100).toFixed(2).replace('.', ',') + ' €';
+
+      document.getElementById('display-subtotal').textContent = subFormatted;
+      document.getElementById('display-envio').textContent = envioFormatted;
+      document.getElementById('display-total').textContent = totalFormatted;
+
+      const steps = ['recibido', 'cocina', 'listo', 'entregado'];
+      const currentIndex = steps.indexOf(estado);
+
+      steps.forEach((step, idx) => {
+        const circle = document.getElementById(`circle-${step}`);
+        const label = document.getElementById(`label-${step}`);
+
+        if (circle && label) {
+          circle.className = 'step-circle';
+          label.className = 'step-label';
+
+          if (idx < currentIndex) {
+            circle.classList.add('completed');
+            circle.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+          } else if (idx === currentIndex) {
+            circle.classList.add('active');
+            circle.textContent = idx + 1;
+            label.classList.add('active');
+          } else {
+            circle.textContent = idx + 1;
+          }
+        }
+      });
+
+      const mainText = document.getElementById('status-main-text');
+      const subText = document.getElementById('status-sub-text');
+      const iconWrap = document.getElementById('status-icon');
+
+      if (estado === 'recibido') {
+        mainText.textContent = 'Tu comanda ha sido confirmada';
+        subText.textContent = 'El equipo del restaurante ha recibido tu pedido.';
+        iconWrap.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+      } else if (estado === 'cocina') {
+        mainText.textContent = 'En preparación en cocina';
+        subText.textContent = 'Tus platos se están cocinando ahora mismo al fuego.';
+        iconWrap.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3.5z"></path></svg>';
+      } else if (estado === 'listo') {
+        const isDelivery = order.tipo_servicio === 'delivery';
+        mainText.textContent = isDelivery ? 'Pedido en camino con repartidor' : 'Tu pedido está listo para recoger';
+        subText.textContent = isDelivery ? 'El repartidor está en ruta hacia tu dirección.' : 'Ya puedes pasar por el mostrador a retirarlo caliente.';
+        iconWrap.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>';
+      } else if (estado === 'entregado') {
+        mainText.textContent = '¡Comanda entregada con éxito!';
+        subText.textContent = '¡Que aproveche! Gracias por confiar directamente en nosotros.';
+        iconWrap.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+      } else if (estado === 'cancelado') {
+        mainText.textContent = 'Comanda cancelada';
+        subText.textContent = 'Ponte en contacto con el restaurante para más información.';
+      }
+
+      const itemsContainer = document.getElementById('items-list-container');
+      if (itemsContainer && order.lineas) {
+        itemsContainer.innerHTML = order.lineas.map(line => {
+          const extrasText = (line.extras || []).map(e => e.opcion_nombre).join(', ');
+          return `
+            <li class="item-entry">
+              <div>
+                <span class="item-name"><strong>${line.cantidad}x</strong> ${line.nombre_producto}</span>
+                ${extrasText ? `<span class="item-extras">+ ${extrasText}</span>` : ''}
+              </div>
+              <span class="item-price">${((line.total_linea_cents||0)/100).toFixed(2).replace('.', ',')} €</span>
+            </li>
+          `;
+        }).join('');
+      }
+    }
+
+    async function fetchTrackingStatus() {
+      // 1. Supabase
+      if (window.supabaseClient && ACTIVE_TOKEN) {
+        try {
+          const { data, error } = await window.supabaseClient
+            .from('pedidos')
+            .select('*, lineas_de_pedido(*)')
+            .eq('tracking_token', ACTIVE_TOKEN)
+            .maybeSingle();
+
+          if (!error && data) {
+            updateTrackingUI({
+              ...data,
+              lineas: (data.lineas_de_pedido || []).map(l => ({
+                ...l,
+                extras: Array.isArray(l.extras_json) ? l.extras_json : (typeof l.extras_json === 'string' ? JSON.parse(l.extras_json) : [])
+              }))
+            });
+            return;
+          }
+        } catch (_) {}
+      }
+
+      // 2. LocalStorage
+      try {
+        const local = JSON.parse(localStorage.getItem('fogon_orders') || '[]');
+        const found = local.find(o => o.tracking_token === ACTIVE_TOKEN || o.id === ACTIVE_TOKEN);
+        if (found) {
+          updateTrackingUI(found);
+          return;
+        }
+      } catch (_) {}
+    }
+
+    // Live sync
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchTrackingStatus();
+
+      if (window.supabaseClient && ACTIVE_TOKEN) {
+        try {
+          window.supabaseClient
+            .channel(`tracking-${ACTIVE_TOKEN}`)
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'pedidos', filter: `tracking_token=eq.${ACTIVE_TOKEN}` }, (payload) => {
+              fetchTrackingStatus();
+            })
+            .subscribe();
+        } catch (_) {}
+      }
+
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'fogon_orders') {
+          fetchTrackingStatus();
+        }
+      });
+
+      setInterval(fetchTrackingStatus, 4000);
+    });
+  </script>
+
+</body>
+</html>
