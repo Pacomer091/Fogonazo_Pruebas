@@ -422,6 +422,7 @@ const server = http.createServer(async (req, res) => {
       .replace(/{{RESTAURANTE_NOMBRE}}/g, currentRest.nombre)
       .replace(/{{RESTAURANTE_SLUG}}/g, currentRest.slug)
       .replace(/{{RESTAURANTE_TAGLINE}}/g, currentRest.tagline || '')
+      .replace(/{{BANNER_URL}}/g, currentRest.banner_url || '/img/banner-demo.jpg')
       .replace(/{{COLOR_PRIMARIO}}/g, currentRest.color_primario || '#ff5500')
       .replace(/{{COLOR_SECUNDARIO}}/g, currentRest.color_secundario || '#ff8c42')
       .replace(/{{MONEDA}}/g, currentRest.moneda || '€')
