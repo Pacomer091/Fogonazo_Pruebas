@@ -49,11 +49,34 @@ function renderCategoryPills() {
   });
 }
 
+// Desplazamiento horizontal EXCLUSIVO de la barra de categorías (nunca altera el scroll vertical de la ventana)
+function scrollCategoryPillIntoView(btn) {
+  if (!btn) return;
+  const container = document.getElementById('cat-pills-container');
+  if (!container) return;
+
+  const btnLeft = btn.offsetLeft;
+  const btnWidth = btn.offsetWidth;
+  const containerWidth = container.clientWidth;
+
+  const targetScrollLeft = btnLeft - (containerWidth / 2) + (btnWidth / 2);
+  container.scrollTo({
+    left: Math.max(0, targetScrollLeft),
+    behavior: 'smooth'
+  });
+}
+
+let isProgrammaticScroll = false;
+let programmaticScrollTimer = null;
+
 function scrollToCat(catId, btn) {
+  isProgrammaticScroll = true;
+  if (programmaticScrollTimer) clearTimeout(programmaticScrollTimer);
+
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
   if (btn) {
     btn.classList.add('active');
-    btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    scrollCategoryPillIntoView(btn);
   }
 
   if (catId === 'all') {
@@ -61,33 +84,68 @@ function scrollToCat(catId, btn) {
   } else {
     const el = document.getElementById(`cat-sec-${catId}`);
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const headerOffset = 110;
+      const elPosition = el.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = Math.max(0, elPosition - headerOffset);
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
   }
+
+  programmaticScrollTimer = setTimeout(() => {
+    isProgrammaticScroll = false;
+  }, 750);
 }
 
-// Scroll spy para resaltar la categoría visible al hacer scroll
+// Scroll spy pasivo que NO fuerza scrollIntoView en la ventana
 function initCategoryScrollSpy() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const catId = entry.target.id.replace('cat-sec-', '');
-        const targetBtn = document.getElementById(`pill-cat-${catId}`);
-        if (targetBtn) {
-          document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-          targetBtn.classList.add('active');
-          targetBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        }
+  let scrollRaf = null;
+
+  function handleScrollSpy() {
+    if (isProgrammaticScroll) return;
+
+    const sections = document.querySelectorAll('.category-section-block');
+    if (!sections || sections.length === 0) return;
+
+    const scrollY = window.scrollY || window.pageYOffset;
+
+    // Arriba del todo: marcar 'Toda la Carta'
+    if (scrollY < 160) {
+      const allBtn = document.getElementById('pill-all');
+      if (allBtn && !allBtn.classList.contains('active')) {
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        allBtn.classList.add('active');
+        scrollCategoryPillIntoView(allBtn);
+      }
+      return;
+    }
+
+    const triggerOffset = 135;
+    let activeCatId = null;
+
+    sections.forEach(sec => {
+      const rect = sec.getBoundingClientRect();
+      if (rect.top <= triggerOffset + 40 && rect.bottom > triggerOffset) {
+        activeCatId = sec.id.replace('cat-sec-', '');
       }
     });
-  }, {
-    rootMargin: '-100px 0px -60% 0px',
-    threshold: 0
-  });
 
-  document.querySelectorAll('.category-section-block').forEach(sec => {
-    observer.observe(sec);
-  });
+    if (activeCatId) {
+      const targetBtn = document.getElementById(`pill-cat-${activeCatId}`);
+      if (targetBtn && !targetBtn.classList.contains('active')) {
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        targetBtn.classList.add('active');
+        scrollCategoryPillIntoView(targetBtn);
+      }
+    }
+  }
+
+  window.addEventListener('scroll', () => {
+    if (scrollRaf) cancelAnimationFrame(scrollRaf);
+    scrollRaf = requestAnimationFrame(handleScrollSpy);
+  }, { passive: true });
 }
 
 // 2. BUSCADOR EN VIVO FLUIDO
