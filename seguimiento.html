@@ -630,8 +630,8 @@
             p_token: ACTIVE_TOKEN
           });
 
-          if (!error && data && data.ok && data.pedido) {
-            const p = data.pedido;
+          if (!error && data && data.ok) {
+            const p = data.pedido || data;
             updateTrackingUI({
               ...p,
               subtotal_formatted: ((p.subtotal_cents || 0) / 100).toFixed(2).replace('.', ',') + ' €',
