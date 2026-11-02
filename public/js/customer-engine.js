@@ -793,40 +793,45 @@ async function handleFormCheckout(e) {
 
       if (window.supabaseClient) {
         try {
-          const { error: supaErr } = await window.supabaseClient.from('pedidos').insert({
-            id: orderObj.id,
-            restaurante_id: orderObj.restaurante_id,
-            numero_comanda: orderObj.numero_comanda,
-            tracking_token: orderObj.tracking_token,
-            tipo_servicio: orderObj.tipo_servicio,
-            direccion_entrega: orderObj.direccion_entrega,
-            cliente_nombre: orderObj.cliente_nombre,
-            cliente_telefono: orderObj.cliente_telefono,
-            notas_cliente: orderObj.notas_cliente,
-            subtotal_cents: orderObj.subtotal_cents,
-            gastos_envio_cents: orderObj.gastos_envio_cents,
-            total_cents: orderObj.total_cents,
-            metodo_pago: orderObj.metodo_pago,
-            estado: orderObj.estado,
-            idempotency_key: idempotencyKey
+          const linesPayload = cart.map(item => ({
+            producto_id: item.id,
+            cantidad: item.cantidad,
+            opciones_ids: (item.selectedOptions || []).map(o => o.id)
+          }));
+
+          const { data: rpcRes, error: rpcErr } = await window.supabaseClient.rpc('crear_pedido', {
+            p_restaurante_id: RESTAURANTE.id || 'rest_demo',
+            p_tipo_servicio: currentServiceType,
+            p_cliente_nombre: clienteNombre,
+            p_cliente_telefono: clienteTelefono,
+            p_cliente_email: null,
+            p_direccion_entrega: direccionEntrega,
+            p_notas_cliente: notasCliente || null,
+            p_metodo_pago: selectedPayment,
+            p_idempotency_key: idempotencyKey,
+            p_lineas: linesPayload
           });
 
-          if (!supaErr) {
-            const linesPayload = lines.map(l => ({
-              id: l.id,
-              pedido_id: orderObj.id,
-              restaurante_id: orderObj.restaurante_id,
-              producto_id: l.producto_id,
-              nombre_producto: l.nombre_producto,
-              cantidad: l.cantidad,
-              precio_unitario_cents: l.precio_unitario_cents,
-              total_linea_cents: l.total_linea_cents,
-              extras_json: l.extras
-            }));
-            await window.supabaseClient.from('lineas_de_pedido').insert(linesPayload);
+          if (!rpcErr && rpcRes && rpcRes.ok) {
+            orderObj.id = rpcRes.pedido_id || orderObj.id;
+            orderObj.numero_comanda = rpcRes.numero_comanda || orderObj.numero_comanda;
+            orderObj.tracking_token = rpcRes.tracking_token || orderObj.tracking_token;
+
+            // En restaurante demo con pago simulado, confirmar estado_pago a completado vía RPC
+            if ((RESTAURANTE.id || 'rest_demo') === 'rest_demo') {
+              try {
+                await window.supabaseClient.rpc('confirmar_pago_simulado_demo', {
+                  p_tracking_token: orderObj.tracking_token
+                });
+              } catch (pagoErr) {
+                console.warn('Confirmación pago simulado demo:', pagoErr);
+              }
+            }
+          } else {
+            console.warn('RPC crear_pedido no disponible o retornó error:', rpcErr);
           }
         } catch (supaErr) {
-          console.warn('Supabase insert note:', supaErr);
+          console.warn('Supabase crear_pedido error:', supaErr);
         }
       }
 
@@ -840,7 +845,7 @@ async function handleFormCheckout(e) {
       showToast('¡Comanda aceptada! Abriendo seguimiento...');
 
       setTimeout(() => {
-        window.location.href = `seguimiento.html?token=${trackingToken}`;
+        window.location.href = `seguimiento.html?token=${orderObj.tracking_token}`;
       }, 350);
       return;
     } catch (err) {

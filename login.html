@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Acceso — Fogonazo OS</title>
+  <link rel="icon" type="image/png" href="img/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    window.SUPABASE_CONFIG = {
+      url: 'https://bmikdaufucnrezcbssab.supabase.co',
+      key: 'sb_publishable__Jw9hiEizMUSztT-NG559w_ACP1aMrr'
+    };
+    try {
+      window.supabaseClient = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.key);
+    } catch (e) {
+      console.warn('Supabase init notice:', e);
+    }
+  </script>
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: rgba(17, 24, 39, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --input-bg: rgba(15, 23, 42, 0.7);
+      --input-border: rgba(255, 255, 255, 0.12);
+      --brand-orange: #ff5500;
+      --brand-orange-hover: #ff6e26;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 15%, rgba(255, 85, 0, 0.12) 0%, transparent 60%),
+                  radial-gradient(circle at 80% 80%, rgba(30, 41, 59, 0.5) 0%, transparent 50%),
+                  var(--bg-dark);
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-main);
+      padding: 1.5rem;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6),
+                  0 0 0 1px rgba(255, 255, 255, 0.04);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ff5500, #ff8c00);
+    }
+
+    .brand-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .brand-logo-wrap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: rgba(255, 85, 0, 0.1);
+      border: 1px solid rgba(255, 85, 0, 0.25);
+      margin-bottom: 1rem;
+    }
+
+    .brand-logo-wrap img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+    }
+
+    .brand-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.35rem 0;
+      color: #ffffff;
+    }
+
+    .brand-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .alert-box {
+      display: none;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      margin-bottom: 1.25rem;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+    }
+
+    .alert-info {
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      color: #93c5fd;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #cbd5e1;
+      margin-bottom: 0.5rem;
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      font-size: 0.95rem;
+      color: #ffffff;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--brand-orange);
+      box-shadow: 0 0 0 3px rgba(255, 85, 0, 0.2);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .form-input::placeholder {
+      color: #64748b;
+    }
+
+    .btn-toggle-pwd {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      transition: color 0.15s;
+    }
+
+    .btn-toggle-pwd:hover {
+      color: #cbd5e1;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--brand-orange);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 0.9rem 1.25rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(255, 85, 0, 0.3);
+      margin-top: 1.5rem;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      background: var(--brand-orange-hover);
+      box-shadow: 0 6px 20px rgba(255, 85, 0, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 1.75rem;
+      font-size: 0.8rem;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .footer-link {
+      color: #94a3b8;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 0.5rem;
+      transition: color 0.15s;
+    }
+
+    .footer-link:hover {
+      color: var(--brand-orange);
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="login-card">
+      <div class="brand-header">
+        <div class="brand-logo-wrap">
+          <img src="img/logo.png" alt="Fogonazo OS">
+        </div>
+        <h1 class="brand-title">Fogonazo OS</h1>
+        <p class="brand-subtitle">Panel de Control & Cocina KDS</p>
+      </div>
+
+      <div id="alert-box" class="alert-box alert-error">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span id="alert-text">Error al autenticar</span>
+      </div>
+
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Correo Electrónico</label>
+          <div class="input-wrap">
+            <input type="email" id="login-email" class="form-input" placeholder="admin@restaurante.com" required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">Contraseña</label>
+          <div class="input-wrap">
+            <input type="password" id="login-password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+            <button type="button" class="btn-toggle-pwd" onclick="togglePasswordVisibility()" aria-label="Mostrar contraseña">
+              <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="btn-submit" class="btn-submit">
+          <div id="btn-spinner" class="spinner"></div>
+          <span id="btn-label">Iniciar Sesión</span>
+        </button>
+      </form>
+
+      <div class="footer-note">
+        Las cuentas son administradas por el superadministrador del sistema. Si necesitas acceso o restablecer tu clave, contacta con soporte técnico.
+        <div>
+          <a href="index.html" class="footer-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Volver a la portada
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function togglePasswordVisibility() {
+      const pwdInput = document.getElementById('login-password');
+      const eyeIcon = document.getElementById('eye-icon');
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+      } else {
+        pwdInput.type = 'password';
+        eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+      }
+    }
+
+    function showAlert(message, type = 'error') {
+      const box = document.getElementById('alert-box');
+      const text = document.getElementById('alert-text');
+      box.className = 'alert-box ' + (type === 'error' ? 'alert-error' : 'alert-info');
+      text.textContent = message;
+      box.style.display = 'flex';
+    }
+
+    function hideAlert() {
+      document.getElementById('alert-box').style.display = 'none';
+    }
+
+    function setLoading(isLoading) {
+      const btn = document.getElementById('btn-submit');
+      const spinner = document.getElementById('btn-spinner');
+      const label = document.getElementById('btn-label');
+      btn.disabled = isLoading;
+      spinner.style.display = isLoading ? 'block' : 'none';
+      label.textContent = isLoading ? 'Verificando...' : 'Iniciar Sesión';
+    }
+
+    // Comprobar si ya hay una sesión activa al cargar la página
+    async function checkExistingSession() {
+      if (!window.supabaseClient) return;
+      try {
+        const { data: { session } } = await window.supabaseClient.auth.getSession();
+        if (session && session.user) {
+          await routeAuthenticatedUser(session.user);
+        }
+      } catch (err) {
+        console.warn('Comprobación de sesión previa:', err);
+      }
+    }
+
+    // Enrutar al usuario según su rol en la tabla perfiles
+    async function routeAuthenticatedUser(user) {
+      try {
+        const { data: perfil, error } = await window.supabaseClient
+          .from('perfiles')
+          .select('rol, restaurante_id, nombre')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (error || !perfil) {
+          console.warn('Perfil no encontrado para user_id:', user.id);
+          showAlert('Tu usuario está autenticado pero no tiene un perfil asignado en el sistema. Contacta con soporte.');
+          await window.supabaseClient.auth.signOut();
+          return;
+        }
+
+        // Guardar datos en sessionStorage para carga instantánea
+        sessionStorage.setItem('fogon_user_profile', JSON.stringify(perfil));
+
+        if (perfil.rol === 'superadmin') {
+          window.location.href = 'admin.html';
+        } else if (perfil.rol === 'dueno') {
+          window.location.href = 'control.html';
+        } else {
+          showAlert('Rol no reconocido: ' + perfil.rol);
+        }
+      } catch (err) {
+        showAlert('Error al consultar perfil: ' + (err.message || 'Error desconocido'));
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      hideAlert();
+
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      if (!email || !password) {
+        showAlert('Por favor, introduce tu correo y contraseña.');
+        return;
+      }
+
+      if (!window.supabaseClient) {
+        showAlert('Error de inicialización de Supabase. Revisa la conexión.');
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+        if (error) {
+          let userMsg = 'Credenciales no válidas. Comprueba tu correo y contraseña.';
+          if (error.message.includes('Invalid login credentials')) {
+            userMsg = 'Correo electrónico o contraseña incorrectos.';
+          } else if (error.message.includes('Email not confirmed')) {
+            userMsg = 'El correo electrónico no ha sido confirmado aún.';
+          } else if (error.message) {
+            userMsg = error.message;
+          }
+          showAlert(userMsg);
+          setLoading(false);
+          return;
+        }
+
+        if (data && data.user) {
+          await routeAuthenticatedUser(data.user);
+        }
+      } catch (err) {
+        showAlert('Error inesperado al conectar: ' + (err.message || err));
+        setLoading(false);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkExistingSession();
+    });
+  </script>
+</body>
+</html>

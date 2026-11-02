@@ -482,6 +482,31 @@
       </div>
     </div>
 
+    <!-- Chat directo con el restaurante / cocina -->
+    <div class="details-box" style="margin-top: 1.5rem;">
+      <h2 class="details-heading">
+        <span style="display:flex; align-items:center; gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          Chat con el Restaurante
+        </span>
+        <span style="font-size:0.75rem; font-weight:600; color:var(--text-muted);">Directo con cocina</span>
+      </h2>
+
+      <div id="chat-messages-container" style="max-height: 220px; overflow-y: auto; padding: 10px 0; display: flex; flex-direction: column; gap: 8px;">
+        <div style="font-size: 0.82rem; color: var(--text-muted); text-align: center; padding: 12px 0;">
+          ¿Tienes alguna duda sobre tu pedido? Escríbenos directamente aquí.
+        </div>
+      </div>
+
+      <form id="chat-form" onsubmit="handleSendChatMessage(event)" style="display: flex; gap: 8px; margin-top: 10px;">
+        <input type="text" id="chat-input" placeholder="Escribe un mensaje al restaurante..." style="flex: 1; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 0.88rem; outline: none;" required>
+        <button type="submit" id="btn-send-chat" class="btn btn-primary" style="padding: 10px 16px; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          <span>Enviar</span>
+        </button>
+      </form>
+    </div>
+
     <div class="tracking-footer-actions">
       <a href="demo.html" class="btn btn-secondary">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
@@ -500,20 +525,28 @@
     const urlParams = new URLSearchParams(window.location.search);
     const ACTIVE_TOKEN = urlParams.get('token') || "trk_demo_sample_1";
 
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     function updateTrackingUI(order) {
       if (!order) return;
 
       const estado = order.estado || 'recibido';
       
-      // Actualiza badges del encabezado
-      document.getElementById('header-order-num').textContent = '#' + order.numero_comanda;
+      document.getElementById('header-order-num').textContent = '#' + (order.numero_comanda || '101');
       document.getElementById('display-service-type').textContent = order.tipo_servicio === 'delivery' ? 'Entrega a domicilio' : 'Recogida en local';
-      document.getElementById('display-address').textContent = order.direccion_entrega || 'Recogida en el local';
-      document.getElementById('display-name').textContent = order.cliente_nombre;
-      document.getElementById('display-phone').textContent = order.cliente_telefono;
-      document.getElementById('display-notes').textContent = order.notas_cliente || 'Sin notas especiales';
+      document.getElementById('display-address').textContent = escapeHtml(order.direccion_entrega || 'Recogida en el local');
+      document.getElementById('display-name').textContent = escapeHtml(order.cliente_nombre || 'Cliente');
+      document.getElementById('display-phone').textContent = escapeHtml(order.cliente_telefono || '-');
+      document.getElementById('display-notes').textContent = escapeHtml(order.notas_cliente || 'Sin notas especiales');
 
-      // Totales
       const subFormatted = order.subtotal_formatted || ((order.subtotal_cents||0)/100).toFixed(2).replace('.', ',') + ' €';
       const envioFormatted = order.gastos_envio_formatted || ((order.gastos_envio_cents||0)/100).toFixed(2).replace('.', ',') + ' €';
       const totalFormatted = order.total_formatted || ((order.total_cents||0)/100).toFixed(2).replace('.', ',') + ' €';
@@ -579,8 +612,8 @@
           return `
             <li class="item-entry">
               <div>
-                <span class="item-name"><strong>${line.cantidad}x</strong> ${line.nombre_producto}</span>
-                ${extrasText ? `<span class="item-extras">+ ${extrasText}</span>` : ''}
+                <span class="item-name"><strong>${line.cantidad}x</strong> ${escapeHtml(line.nombre_producto)}</span>
+                ${extrasText ? `<span class="item-extras">+ ${escapeHtml(extrasText)}</span>` : ''}
               </div>
               <span class="item-price">${((line.total_linea_cents||0)/100).toFixed(2).replace('.', ',')} €</span>
             </li>
@@ -590,21 +623,23 @@
     }
 
     async function fetchTrackingStatus() {
-      // 1. Supabase
+      // 1. Supabase vía RPC segura con token (compatible con RLS estricto)
       if (window.supabaseClient && ACTIVE_TOKEN) {
         try {
-          const { data, error } = await window.supabaseClient
-            .from('pedidos')
-            .select('*, lineas_de_pedido(*)')
-            .eq('tracking_token', ACTIVE_TOKEN)
-            .maybeSingle();
+          const { data, error } = await window.supabaseClient.rpc('obtener_pedido_por_token', {
+            p_token: ACTIVE_TOKEN
+          });
 
-          if (!error && data) {
+          if (!error && data && data.ok && data.pedido) {
+            const p = data.pedido;
             updateTrackingUI({
-              ...data,
-              lineas: (data.lineas_de_pedido || []).map(l => ({
+              ...p,
+              subtotal_formatted: ((p.subtotal_cents || 0) / 100).toFixed(2).replace('.', ',') + ' €',
+              gastos_envio_formatted: ((p.gastos_envio_cents || 0) / 100).toFixed(2).replace('.', ',') + ' €',
+              total_formatted: ((p.total_cents || 0) / 100).toFixed(2).replace('.', ',') + ' €',
+              lineas: (p.lineas || []).map(l => ({
                 ...l,
-                extras: Array.isArray(l.extras_json) ? l.extras_json : (typeof l.extras_json === 'string' ? JSON.parse(l.extras_json) : [])
+                extras: Array.isArray(l.extras) ? l.extras : (typeof l.extras_json === 'string' ? JSON.parse(l.extras_json) : (l.extras_json || []))
               }))
             });
             return;
@@ -612,7 +647,7 @@
         } catch (_) {}
       }
 
-      // 2. LocalStorage
+      // 2. LocalStorage fallback
       try {
         const local = JSON.parse(localStorage.getItem('fogon_orders') || '[]');
         const found = local.find(o => o.tracking_token === ACTIVE_TOKEN || o.id === ACTIVE_TOKEN);
@@ -623,20 +658,73 @@
       } catch (_) {}
     }
 
-    // Live sync
+    async function loadChatMessages() {
+      if (!window.supabaseClient || !ACTIVE_TOKEN) return;
+      try {
+        const { data, error } = await window.supabaseClient.rpc('obtener_mensajes_chat_cliente', {
+          p_token: ACTIVE_TOKEN
+        });
+        if (!error && Array.isArray(data)) {
+          renderChatMessages(data);
+        }
+      } catch (e) {
+        console.warn('Chat load error:', e);
+      }
+    }
+
+    function renderChatMessages(messages) {
+      const container = document.getElementById('chat-messages-container');
+      if (!container) return;
+      if (!messages || messages.length === 0) {
+        container.innerHTML = '<div style="font-size: 0.82rem; color: var(--text-muted); text-align: center; padding: 12px 0;">¿Tienes alguna duda sobre tu pedido? Escríbenos directamente aquí.</div>';
+        return;
+      }
+      container.innerHTML = messages.map(m => {
+        const isCliente = m.emisor === 'cliente';
+        const bg = isCliente ? 'rgba(255, 85, 0, 0.1)' : 'rgba(241, 245, 249, 1)';
+        const align = isCliente ? 'flex-end' : 'flex-start';
+        const border = isCliente ? 'rgba(255, 85, 0, 0.2)' : '#e2e8f0';
+        return `
+          <div style="align-self: ${align}; max-width: 80%; background: ${bg}; border: 1px solid ${border}; border-radius: 12px; padding: 8px 12px; font-size: 0.85rem;">
+            <div style="font-size: 0.7rem; font-weight: 700; color: ${isCliente ? 'var(--brand-orange)' : '#64748b'}; margin-bottom: 2px;">
+              ${isCliente ? 'Tú' : 'Restaurante'} • ${new Date(m.created_at).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+            </div>
+            <div style="color: var(--text-main); word-break: break-word;">${escapeHtml(m.mensaje)}</div>
+          </div>
+        `;
+      }).join('');
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function handleSendChatMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById('chat-input');
+      const msg = input.value.trim();
+      if (!msg || !window.supabaseClient || !ACTIVE_TOKEN) return;
+
+      const btn = document.getElementById('btn-send-chat');
+      btn.disabled = true;
+      try {
+        const { data, error } = await window.supabaseClient.rpc('enviar_mensaje_cliente', {
+          p_token: ACTIVE_TOKEN,
+          p_mensaje: msg
+        });
+        if (!error && data && data.ok) {
+          input.value = '';
+          await loadChatMessages();
+        } else {
+          console.warn('Error enviando mensaje chat:', error);
+        }
+      } catch (err) {
+        console.warn('Chat error:', err);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       fetchTrackingStatus();
-
-      if (window.supabaseClient && ACTIVE_TOKEN) {
-        try {
-          window.supabaseClient
-            .channel(`tracking-${ACTIVE_TOKEN}`)
-            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'pedidos', filter: `tracking_token=eq.${ACTIVE_TOKEN}` }, (payload) => {
-              fetchTrackingStatus();
-            })
-            .subscribe();
-        } catch (_) {}
-      }
+      loadChatMessages();
 
       window.addEventListener('storage', (e) => {
         if (e.key === 'fogon_orders') {
@@ -644,7 +732,11 @@
         }
       });
 
-      setInterval(fetchTrackingStatus, 4000);
+      // Polling seguro cada 4 segundos
+      setInterval(() => {
+        fetchTrackingStatus();
+        loadChatMessages();
+      }, 4000);
     });
   </script>
 
