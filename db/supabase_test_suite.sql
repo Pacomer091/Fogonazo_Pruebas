@@ -6,6 +6,10 @@
 
 BEGIN;
 
+-- Desactivar temporalmente la FK hacia auth.users para permitir UUIDs ficticios durante el test transaccional.
+-- Al finalizar con ROLLBACK, la restricción y el estado original de la tabla quedan intactos.
+ALTER TABLE public.perfiles DROP CONSTRAINT IF EXISTS perfiles_user_id_fkey;
+
 -- Crear tabla temporal para registrar los resultados de las pruebas
 CREATE TEMP TABLE IF NOT EXISTS temp_test_results (
   id INT,
@@ -17,6 +21,7 @@ CREATE TEMP TABLE IF NOT EXISTS temp_test_results (
 
 DO $$
 DECLARE
+  r RECORD;
   v_res JSONB;
   v_token TEXT;
   v_ped_id TEXT;
@@ -346,8 +351,25 @@ BEGIN
     INSERT INTO temp_test_results VALUES (16, 'anon', 'Idempotencia no consume límite teléfono', 'FAILED', SQLERRM);
   END;
 
+  -- ------------------------------------------------------------------
+  -- LIMPIEZA INTERNA Y RESUMEN
+  -- ------------------------------------------------------------------
+  DELETE FROM public.perfiles WHERE user_id IN (v_dueno_a_id, v_dueno_b_id, v_admin_id);
+  DELETE FROM public.productos WHERE id = 'prod_b_pizza';
+  DELETE FROM public.categorias WHERE id = 'cat_b_1';
+  DELETE FROM public.restaurantes WHERE id = 'rest_b';
+
+  -- Emitir resumen en la consola de PostgreSQL (visible en la pestaña Messages de Supabase)
+  FOR r IN SELECT * FROM temp_test_results ORDER BY id LOOP
+    RAISE NOTICE '[%] Test % (%): % -> %', r.resultado, r.id, r.rol, r.test_name, r.detalle;
+  END LOOP;
 END;
 $$;
+
+-- Restaurar explícitamente la FK antes de las consultas de auditoría
+ALTER TABLE public.perfiles 
+  ADD CONSTRAINT perfiles_user_id_fkey 
+  FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
 
 -- Mostrar informe de resultados de las pruebas
 SELECT id, rol, test_name, resultado, detalle 
