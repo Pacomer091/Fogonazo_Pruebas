@@ -1,9 +1,13 @@
 node_modules/
+**/node_modules/
 .env
-fogon.db
-fogon.db-wal
-fogon.db-shm
+**/.env
+*.db
+**/*.db
+*.db-wal
+**/*.db-wal
+*.db-shm
+**/*.db-shm
 .DS_Store
 Thumbs.db
 scratch/
-
